@@ -1,0 +1,67 @@
+ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccCyOaB3.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"can_command_reset.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/can_command_reset.c"
+  20              		.section	.text.CAN_Reset_Command,"ax",%progbits
+  21              		.align	1
+  22              		.global	CAN_Reset_Command
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	CAN_Reset_Command:
+  28              	.LVL0:
+  29              	.LFB232:
+   1:Core/Src/can_command_reset.c **** #include "can.h"
+   2:Core/Src/can_command_reset.c **** 
+   3:Core/Src/can_command_reset.c **** 
+   4:Core/Src/can_command_reset.c **** void CAN_Reset_Command(uint32_t base_id)
+   5:Core/Src/can_command_reset.c **** {
+  30              		.loc 1 5 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   6:Core/Src/can_command_reset.c **** #ifdef CAN_RESET_CMD_BASE
+   7:Core/Src/can_command_reset.c ****     if (base_id == (CAN_RESET_CMD_BASE & CAN_BASE_ID_MASK)) {
+   8:Core/Src/can_command_reset.c ****         NVIC_SystemReset();
+   9:Core/Src/can_command_reset.c **** 
+  10:Core/Src/can_command_reset.c ****         
+  11:Core/Src/can_command_reset.c ****     }
+  12:Core/Src/can_command_reset.c **** #endif
+  13:Core/Src/can_command_reset.c **** }...
+  35              		.loc 1 13 1 view .LVU1
+  36 0000 7047     		bx	lr
+  37              		.cfi_endproc
+  38              	.LFE232:
+  40              		.text
+  41              	.Letext0:
+  42              		.file 2 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+  43              		.file 3 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+  44              		.file 4 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_dma.h"
+ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccCyOaB3.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 can_command_reset.c
+C:\Users\kerry\AppData\Local\Temp\ccCyOaB3.s:21     .text.CAN_Reset_Command:00000000 $t
+C:\Users\kerry\AppData\Local\Temp\ccCyOaB3.s:27     .text.CAN_Reset_Command:00000000 CAN_Reset_Command
+
+NO UNDEFINED SYMBOLS

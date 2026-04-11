@@ -1,0 +1,30 @@
+# Dual-bank wrapper for the Cube-generated Makefile.
+# Produces Bank A and Bank B application binaries in one build invocation.
+
+BASE_TARGET ?= Baby_MOBO
+INNER_MAKE ?= Makefile
+COMMON_BUILD_DIR ?= build/debug
+
+BANK_A_C_DEFS := -DUSE_HAL_DRIVER -DSTM32L432xx -DSTM32_THREAD_SAFE_STRATEGY=4 -DUSER_VECT_TAB_ADDRESS -DVECT_TAB_OFFSET=0x8000
+BANK_B_C_DEFS := -DUSE_HAL_DRIVER -DSTM32L432xx -DSTM32_THREAD_SAFE_STRATEGY=4 -DUSER_VECT_TAB_ADDRESS -DVECT_TAB_OFFSET=0x22000
+
+.PHONY: all bank_a bank_b clean
+
+all: bank_a bank_b
+
+bank_a:
+	$(MAKE) -f $(INNER_MAKE) \
+		BUILD_DIR=$(COMMON_BUILD_DIR) \
+		TARGET=$(BASE_TARGET)_a \
+		LDSCRIPT=STM32L432XX_APP_BANK_A.ld \
+		C_DEFS="$(BANK_A_C_DEFS)"
+
+bank_b:
+	$(MAKE) -f $(INNER_MAKE) \
+		BUILD_DIR=$(COMMON_BUILD_DIR) \
+		TARGET=$(BASE_TARGET)_b \
+		LDSCRIPT=STM32L432XX_APP_BANK_B.ld \
+		C_DEFS="$(BANK_B_C_DEFS)"
+
+clean:
+	$(MAKE) -f $(INNER_MAKE) BUILD_DIR=$(COMMON_BUILD_DIR) clean

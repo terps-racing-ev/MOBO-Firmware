@@ -1,0 +1,86 @@
+VERSION ""
+
+NS_ :
+    NS_DESC_
+    CM_
+    BA_DEF_
+    BA_
+    VAL_
+    CAT_DEF_
+    CAT_
+    FILTER
+    BA_DEF_DEF_
+    EV_DATA_
+    ENVVAR_DATA_
+    SGTYPE_
+    SGTYPE_VAL_
+    BA_DEF_SGTYPE_
+    BA_SGTYPE_
+    SIG_TYPE_REF_
+    VAL_TABLE_
+    SIG_GROUP_
+    SIG_VALTYPE_
+    SIGTYPE_VALTYPE_
+    BO_TX_BU_
+    BA_DEF_REL_
+    BA_REL_
+    BA_DEF_DEF_REL_
+    BU_SG_REL_
+    BU_EV_REL_
+    BU_BO_REL_
+    SG_MUL_VAL_
+
+BS_:
+
+BU_: Baby_MOBO Host_Tool
+
+BO_ 2149581296 MOBO_Summary: 8 Baby_MOBO
+ SG_ Heartbeat_Toggle : 0|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC_1 : 8|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC_2 : 9|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC_3 : 10|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BMS : 11|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BSPD : 12|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ IMD : 13|1@1+ (1,0) [0|1] "" Host_Tool
+
+BO_ 2149581038 MOBO_Power_Info: 8 Baby_MOBO
+ SG_ Battery_Voltage : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+
+BO_ 2149581552 MOBO_LC_Summary: 8 Baby_MOBO
+ SG_ FiveV_Sense : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+ SG_ Brake_Input : 16|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+ SG_ LV_Current : 32|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+
+BO_ 2149581808 MOBO_HC_Summary: 8 Baby_MOBO
+ SG_ HC_Current : 0|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+ SG_ Pump_Cmd : 16|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ DRS_Cmd : 17|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Fans_Cmd : 18|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Rad_Cmd : 19|1@1+ (1,0) [0|1] "" Host_Tool
+
+BO_ 2151678455 CAN_Reset_Command: 8 Host_Tool
+ SG_ Reset_Command_Raw : 0|64@1+ (1,0) [0|18446744073709551615] "" Baby_MOBO
+
+CM_ BO_ 2149581296 "Periodic MOBO summary frame from CAN_MOBO_Summary(); only heartbeat toggle in byte 0 is currently active.";
+CM_ BO_ 2149581038 "Battery sense reading from ADC1_IN5 with only bytes 0-1 used for battery voltage.";
+CM_ BO_ 2149581552 "Low-current summary from ADC1_IN7, ADC1_IN6, and ADC1_IN8 with only FiveV, Brake, and LV current bytes active.";
+CM_ BO_ 2149581808 "High-current summary from ADC1_IN11 with current in bytes 0-1 and output command bits in byte 2.";
+CM_ BO_ 2151678455 "Send this extended ID to trigger NVIC_SystemReset() in CAN_ProcessRXQueue().";
+
+VAL_ 2149581296 Heartbeat_Toggle 0 "Off" 1 "On";
+VAL_ 2149581296 SDC_1 0 "Inactive" 1 "Active";
+VAL_ 2149581296 SDC_2 0 "Inactive" 1 "Active";
+VAL_ 2149581296 SDC_3 0 "Inactive" 1 "Active";
+VAL_ 2149581296 BMS 0 "Inactive" 1 "Active";
+VAL_ 2149581296 BSPD 0 "Inactive" 1 "Active";
+VAL_ 2149581296 IMD 0 "Inactive" 1 "Active";
+VAL_ 2149581808 Pump_Cmd 0 "Off" 1 "On";
+VAL_ 2149581808 DRS_Cmd 0 "Off" 1 "On";
+VAL_ 2149581808 Fans_Cmd 0 "Off" 1 "On";
+VAL_ 2149581808 Rad_Cmd 0 "Off" 1 "On";
+
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
+BA_ "GenMsgCycleTime" BO_ 2149581296 1000;
+BA_ "GenMsgCycleTime" BO_ 2149581038 1000;
+BA_ "GenMsgCycleTime" BO_ 2149581552 1000;
+BA_ "GenMsgCycleTime" BO_ 2149581808 1000;

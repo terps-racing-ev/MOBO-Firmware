@@ -1,0 +1,20 @@
+#ifndef __CAN_ID_H
+#define __CAN_ID_H
+
+//#define CAN_MOBO_HEARTBEAT_ID 0x101U
+//#define CAN_MOBO_STATS_ID 0x102U
+
+//#define CAN_TEST_MESSAGE_ID 0x12345678U
+
+#define CAN_MOBO_Summary_ID 0x002001F0U
+#define CAN_MOBO_Power_Info_ID 0x002000EEU
+#define CAN_MOBO_LC_Summary_ID 0x002002F0U
+#define CAN_MOBO_HC_Summary_ID 0x002003F0U
+
+#define VCU_MOBO_Command_ID 0x001002C0U
+#define RPI_MOBO_Command_ID 0x005002C0U
+
+//#define CAN_BASE_ID_MASK 0xFFFF0FFFU
+#define CAN_RESET_CMD 0x004001F7U
+
+#endif /* __CAN_ID_H */

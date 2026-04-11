@@ -1,0 +1,90 @@
+ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccsjaFxb.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"can_stats_reset.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "Core/Src/can_stats_reset.c"
+  20              		.section	.text.CAN_Reset_Stats,"ax",%progbits
+  21              		.align	1
+  22              		.global	CAN_Reset_Stats
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	CAN_Reset_Stats:
+  28              	.LVL0:
+  29              	.LFB232:
+   1:Core/Src/can_stats_reset.c **** #include "can.h"
+   2:Core/Src/can_stats_reset.c **** 
+   3:Core/Src/can_stats_reset.c **** 
+   4:Core/Src/can_stats_reset.c **** void CAN_Reset_Stats(CAN_Stats_t *stats) {
+  30              		.loc 1 4 42 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+   5:Core/Src/can_stats_reset.c ****     stats->tx_success_count = 0;
+  35              		.loc 1 5 5 view .LVU1
+  36              		.loc 1 5 29 is_stmt 0 view .LVU2
+  37 0000 0023     		movs	r3, #0
+  38 0002 0360     		str	r3, [r0]
+   6:Core/Src/can_stats_reset.c ****     stats->tx_failure_count = 0;
+  39              		.loc 1 6 5 is_stmt 1 view .LVU3
+  40              		.loc 1 6 29 is_stmt 0 view .LVU4
+  41 0004 4360     		str	r3, [r0, #4]
+   7:Core/Src/can_stats_reset.c ****     stats->tx_queue_full_count = 0;
+  42              		.loc 1 7 5 is_stmt 1 view .LVU5
+  43              		.loc 1 7 32 is_stmt 0 view .LVU6
+  44 0006 8360     		str	r3, [r0, #8]
+   8:Core/Src/can_stats_reset.c ****     stats->rx_message_count = 0;
+  45              		.loc 1 8 5 is_stmt 1 view .LVU7
+  46              		.loc 1 8 29 is_stmt 0 view .LVU8
+  47 0008 C360     		str	r3, [r0, #12]
+   9:Core/Src/can_stats_reset.c ****     stats->rx_queue_full_count = 0;
+  48              		.loc 1 9 5 is_stmt 1 view .LVU9
+  49              		.loc 1 9 32 is_stmt 0 view .LVU10
+ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccsjaFxb.s 			page 2
+
+
+  50 000a 0361     		str	r3, [r0, #16]
+  10:Core/Src/can_stats_reset.c ****     stats->bus_error_count = 0;
+  51              		.loc 1 10 5 is_stmt 1 view .LVU11
+  52              		.loc 1 10 28 is_stmt 0 view .LVU12
+  53 000c 4361     		str	r3, [r0, #20]
+  11:Core/Src/can_stats_reset.c **** 
+  12:Core/Src/can_stats_reset.c ****     
+  13:Core/Src/can_stats_reset.c **** }...
+  54              		.loc 1 13 1 view .LVU13
+  55 000e 7047     		bx	lr
+  56              		.cfi_endproc
+  57              	.LFE232:
+  59              		.text
+  60              	.Letext0:
+  61              		.file 2 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+  62              		.file 3 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+  63              		.file 4 "Core/Inc/can.h"
+  64              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_dma.h"
+ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccsjaFxb.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 can_stats_reset.c
+C:\Users\kerry\AppData\Local\Temp\ccsjaFxb.s:21     .text.CAN_Reset_Stats:00000000 $t
+C:\Users\kerry\AppData\Local\Temp\ccsjaFxb.s:27     .text.CAN_Reset_Stats:00000000 CAN_Reset_Stats
+
+NO UNDEFINED SYMBOLS
