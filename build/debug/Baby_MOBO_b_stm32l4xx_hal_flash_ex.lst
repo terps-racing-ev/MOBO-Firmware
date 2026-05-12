@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
   28:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****            (++) Lock and Unlock the FLASH interface using HAL_FLASH_Unlock() and
   29:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****                 HAL_FLASH_Lock() functions
   30:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****            (++) Erase function: Erase page, erase all sectors
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 2
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 2
 
 
   31:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****            (++) There are two modes of erase :
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
   85:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** static HAL_StatusTypeDef FLASH_OB_UserConfig(uint32_t UserType, uint32_t UserConfig);
   86:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** static HAL_StatusTypeDef FLASH_OB_PCROPConfig(uint32_t PCROPConfig, uint32_t PCROPStartAddr, uint32
   87:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** static void              FLASH_OB_GetWRP(uint32_t WRPArea, uint32_t * WRPStartOffset, uint32_t * WR
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 3
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 3
 
 
   88:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** static uint32_t          FLASH_OB_GetRDP(void);
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  142:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  143:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     /* Deactivate the cache if they are activated to avoid data misbehavior */
  144:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     if(READ_BIT(FLASH->ACR, FLASH_ACR_ICEN) != 0U)
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 4
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 4
 
 
  145:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  199:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         /* If the erase operation is completed, disable the PER Bit */
  200:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         CLEAR_BIT(FLASH->CR, (FLASH_CR_PER | FLASH_CR_PNB));
  201:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 5
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 5
 
 
  202:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         if (status != HAL_OK)
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  256:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     /* Disable data cache  */
  257:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     __HAL_FLASH_DATA_CACHE_DISABLE();
  258:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     pFlash.CacheToReactivate = FLASH_CACHE_DCACHE_ENABLED;
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 6
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 6
 
 
  259:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   }
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  313:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     if(FLASH_OB_WRPConfig(pOBInit->WRPArea, pOBInit->WRPStartOffset, pOBInit->WRPEndOffset) != HAL_
  314:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
  315:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       status = HAL_ERROR;
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 7
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 7
 
 
  316:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  370:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   pOBInit->OptionType = (OPTIONBYTE_RDP | OPTIONBYTE_USER);
  371:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  372:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #if defined (STM32L471xx) || defined (STM32L475xx) || defined (STM32L476xx) || defined (STM32L485xx
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 8
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 8
 
 
  373:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     defined (STM32L496xx) || defined (STM32L4A6xx) || \
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  427:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  428:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** /**
  429:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   * @brief  Configuration of the LVE pin of the Flash (managed by power controller
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 9
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 9
 
 
  430:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   *         or forced to low in order to use an external SMPS)
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  484:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #endif /* FLASH_CFGR_LVEN */
  485:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  486:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** /**
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 10
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 10
 
 
  487:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   * @}
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  525:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
  526:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       SET_BIT(FLASH->CR, FLASH_CR_MER2);
  527:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 11
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 11
 
 
  528:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #endif
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  561:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   if(READ_BIT(FLASH->OPTR, FLASH_OPTR_DBANK) == 0U)
  562:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   {
  563:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     CLEAR_BIT(FLASH->CR, FLASH_CR_BKER);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 12
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 12
 
 
  564:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   }
@@ -718,7 +718,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  618:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   }
  619:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  620:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   /* Reset internal variable */
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 13
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 13
 
 
  621:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   pFlash.CacheToReactivate = FLASH_CACHE_DISABLED;
@@ -778,7 +778,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  675:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
  676:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #if defined (STM32L471xx) || defined (STM32L475xx) || defined (STM32L476xx) || defined (STM32L485xx
  677:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     defined (STM32L496xx) || defined (STM32L4A6xx) || \
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 14
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 14
 
 
  678:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     defined (STM32L4P5xx) || defined (STM32L4Q5xx) || \
@@ -838,7 +838,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  732:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   assert_param(IS_OB_RDP_LEVEL(RDPLevel));
  733:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  734:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   /* Wait for last operation to be completed */
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 15
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 15
 
 
  735:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
@@ -898,7 +898,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  789:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  790:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       /* Set value and mask for BOR level option byte */
  791:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_val |= (UserConfig & FLASH_OPTR_BOR_LEV);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 16
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 16
 
 
  792:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_mask |= FLASH_OPTR_BOR_LEV;
@@ -958,7 +958,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  846:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
  847:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       /* IWDG_STDBY option byte should be modified */
  848:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       assert_param(IS_OB_USER_IWDG_STDBY(UserConfig & FLASH_OPTR_IWDG_STDBY));
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 17
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 17
 
 
  849:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
@@ -1018,7 +1018,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  903:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  904:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       /* Set value and mask for nBOOT1 option byte */
  905:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_val |= (UserConfig & FLASH_OPTR_nBOOT1);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 18
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 18
 
 
  906:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_mask |= FLASH_OPTR_nBOOT1;
@@ -1078,7 +1078,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  960:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  961:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     /* Wait for last operation to be completed */
  962:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     status = FLASH_WaitForLastOperation((uint32_t)FLASH_TIMEOUT_VALUE);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 19
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 19
 
 
  963:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
@@ -1138,7 +1138,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
 1017:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     defined (STM32L4R5xx) || defined (STM32L4R7xx) || defined (STM32L4R9xx) || defined (STM32L4S5xx
 1018:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     /* Get the information about the bank swapping */
 1019:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     if (READ_BIT(SYSCFG->MEMRMP, SYSCFG_MEMRMP_FB_MODE) == 0U)
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 20
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 20
 
 
 1020:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
@@ -1198,7 +1198,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
 1074:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       else if((PCROPConfig & FLASH_BANK_BOTH) == FLASH_BANK_2)
 1075:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       {
 1076:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         reg_value = ((PCROPStartAddr - bank2_addr) >> 3);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 21
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 21
 
 
 1077:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         MODIFY_REG(FLASH->PCROP2SR, FLASH_PCROP2SR_PCROP2_STRT, reg_value);
@@ -1258,7 +1258,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
   73              		.loc 1 1125 3 view .LVU8
   74              		.loc 1 1125 5 is_stmt 0 view .LVU9
   75 0000 48B9     		cbnz	r0, .L6
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 22
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 22
 
 
 1126:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   {
@@ -1318,7 +1318,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  101              		.loc 1 1154 1 view .LVU20
  102 001a 7047     		bx	lr
  103              	.LVL5:
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 23
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 23
 
 
  104              	.L8:
@@ -1378,7 +1378,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  140              		.cfi_startproc
  141              		@ args = 0, pretend = 0, frame = 0
  142              		@ frame_needed = 0, uses_anonymous_args = 0
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 24
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 24
 
 
  143              		@ link register save eliminated.
@@ -1438,7 +1438,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  185              	.LFB397:
 1177:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
 1178:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** /**
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 25
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 25
 
 
 1179:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   * @brief  Return the FLASH User Option Byte value.
@@ -1498,7 +1498,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
 1202:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   *          This parameter must be a combination of FLASH_BANK_1 or FLASH_BANK_2
 1203:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   *          with OB_PCROP_RDP_NOT_ERASE or OB_PCROP_RDP_ERASE
 1204:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   *
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 26
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 26
 
 
 1205:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   * @param PCROPStartAddr [out]: specifies the address where to copied the start address
@@ -1558,7 +1558,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
 1244:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   if (READ_BIT(FLASH->OPTR, FLASH_OPTR_DBANK) == 0U)
 1245:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   {
 1246:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     if(((*PCROPConfig) & FLASH_BANK_BOTH) == FLASH_BANK_1)
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 27
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 27
 
 
 1247:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
@@ -1618,7 +1618,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  258              		.loc 1 1276 7 is_stmt 1 view .LVU66
  259              		.loc 1 1276 34 is_stmt 0 view .LVU67
  260 001c 03EAC103 		and	r3, r3, r1, lsl #3
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 28
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 28
 
 
  261              		.loc 1 1276 53 view .LVU68
@@ -1678,7 +1678,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  293              		.cfi_endproc
  294              	.LFE398:
  296              		.section	.text.FLASH_OB_WRPConfig,"ax",%progbits
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 29
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 29
 
 
  297              		.align	1
@@ -1738,7 +1738,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  338 0014 1049     		ldr	r1, .L30
  339 0016 CB6A     		ldr	r3, [r1, #44]
  340 0018 23F07F13 		bic	r3, r3, #8323199
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 30
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 30
 
 
  341 001c 46EA0542 		orr	r2, r6, r5, lsl #16
@@ -1798,7 +1798,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  384 0058 00200240 		.word	1073881088
  385              		.cfi_endproc
  386              	.LFE391:
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 31
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 31
 
 
  388              		.section	.text.FLASH_OB_RDPConfig,"ax",%progbits
@@ -1858,7 +1858,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  431 0012 2B6A     		ldr	r3, [r5, #32]
  432 0014 23F0FF03 		bic	r3, r3, #255
  433 0018 2343     		orrs	r3, r3, r4
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 32
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 32
 
 
  434 001a 2B62     		str	r3, [r5, #32]
@@ -1918,7 +1918,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  775:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  482              		.loc 1 775 3 view .LVU122
  778:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 33
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 33
 
 
  483              		.loc 1 778 3 view .LVU123
@@ -1978,7 +1978,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  519              	.LVL37:
  802:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
  520              		.loc 1 802 7 is_stmt 1 view .LVU142
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 34
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 34
 
 
  802:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
@@ -2038,7 +2038,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  557              		.loc 1 825 5 is_stmt 1 view .LVU160
  825:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     {
  558              		.loc 1 825 7 is_stmt 0 view .LVU161
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 35
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 35
 
 
  559 0050 14F0080F 		tst	r4, #8
@@ -2098,7 +2098,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  851:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_mask |= FLASH_OPTR_IWDG_STDBY;
  595              		.loc 1 851 35 is_stmt 0 view .LVU180
  596 0076 05F48021 		and	r1, r5, #262144
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 36
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 36
 
 
  851:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       optr_reg_mask |= FLASH_OPTR_IWDG_STDBY;
@@ -2158,7 +2158,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  906:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
  633              		.loc 1 906 21 is_stmt 0 view .LVU199
  634 009c 42F40002 		orr	r2, r2, #8388608
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 37
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 37
 
 
  635              	.LVL52:
@@ -2218,7 +2218,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  671 00c0 14F4005F 		tst	r4, #8192
  672 00c4 04D0     		beq	.L51
  937:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 38
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 38
 
 
  673              		.loc 1 937 7 is_stmt 1 view .LVU218
@@ -2278,7 +2278,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  711              	.LVL64:
  956:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  712              		.loc 1 956 5 view .LVU235
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 39
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 39
 
 
  713 00ea 2362     		str	r3, [r4, #32]
@@ -2338,7 +2338,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  760              		.cfi_def_cfa_offset 16
  761              		.cfi_offset 4, -16
  762              		.cfi_offset 5, -12
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 40
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 40
 
 
  763              		.cfi_offset 6, -8
@@ -2398,7 +2398,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  799 0024 43EAD103 		orr	r3, r3, r1, lsr #3
  800 0028 4362     		str	r3, [r0, #36]
 1067:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****         MODIFY_REG(FLASH->PCROP1ER, FLASH_PCROP1ER_PCROP1_END, reg_value);
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 41
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 41
 
 
  801              		.loc 1 1067 9 view .LVU263
@@ -2458,7 +2458,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  843              	.L62:
 1102:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  844              		.loc 1 1102 1 view .LVU276
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 42
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 42
 
 
  845              		.align	2
@@ -2518,7 +2518,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  891 0014 5A60     		str	r2, [r3, #4]
  310:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   {
  892              		.loc 1 310 3 is_stmt 1 view .LVU287
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 43
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 43
 
 
  310:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   {
@@ -2578,7 +2578,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  931 003e 1DD1     		bne	.L79
  932              	.LVL85:
  933              	.L68:
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 44
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 44
 
 
  354:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
@@ -2638,7 +2638,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  974              		.loc 1 326 14 view .LVU317
  975 0068 0125     		movs	r5, #1
  976              	.LVL92:
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 45
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 45
 
 
  326:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****     }
@@ -2698,7 +2698,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1019              		.cfi_endproc
  1020              	.LFE386:
  1022              		.section	.text.HAL_FLASHEx_OBGetConfig,"ax",%progbits
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 46
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 46
 
 
  1023              		.align	1
@@ -2758,7 +2758,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1065              		.loc 1 391 23 discriminator 1 view .LVU342
  1066 0018 A061     		str	r0, [r4, #24]
  399:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #endif
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 47
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 47
 
 
  1067              		.loc 1 399 3 is_stmt 1 view .LVU343
@@ -2818,7 +2818,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1111              		.thumb_func
  1113              	FLASH_PageErase:
  1114              	.LVL107:
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 48
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 48
 
 
  1115              	.LFB389:
@@ -2878,7 +2878,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1162              		@ args = 0, pretend = 0, frame = 0
  1163              		@ frame_needed = 0, uses_anonymous_args = 0
  230:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 49
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 49
 
 
  1164              		.loc 1 230 3 view .LVU364
@@ -2938,7 +2938,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1203 002a 2049     		ldr	r1, .L104+4
  1204 002c 0A68     		ldr	r2, [r1]
  1205 002e 22F48062 		bic	r2, r2, #1024
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 50
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 50
 
 
  1206 0032 0A60     		str	r2, [r1]
@@ -2998,7 +2998,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1242              		.loc 1 280 27 view .LVU397
  1243 0058 9161     		str	r1, [r2, #24]
  281:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 51
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 51
 
 
  1244              		.loc 1 281 5 is_stmt 1 view .LVU398
@@ -3058,7 +3058,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1285 008a D6E7     		b	.L95
  1286              	.L96:
  262:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   }
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 52
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 52
 
 
  1287              		.loc 1 262 5 is_stmt 1 view .LVU412
@@ -3118,7 +3118,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1335              	.LFB390:
  595:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   FLASH_CacheTypeDef cache = pFlash.CacheToReactivate;
  1336              		.loc 1 595 1 is_stmt 1 view -0
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 53
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 53
 
 
  1337              		.cfi_startproc
@@ -3178,7 +3178,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1378              	.LVL118:
  611:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****      (cache == FLASH_CACHE_ICACHE_DCACHE_ENABLED))
  1379              		.loc 1 611 44 view .LVU435
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 54
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 54
 
 
  1380 0032 DBB2     		uxtb	r3, r3
@@ -3238,7 +3238,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1427              	.LFB384:
  126:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****   HAL_StatusTypeDef status;
  1428              		.loc 1 126 1 view -0
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 55
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 55
 
 
  1429              		.cfi_startproc
@@ -3298,7 +3298,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  141:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
  1470              		.loc 1 141 5 is_stmt 1 view .LVU459
  141:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** 
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 56
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 56
 
 
  1471              		.loc 1 141 22 is_stmt 0 view .LVU460
@@ -3358,7 +3358,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1510              		.loc 1 192 7 is_stmt 1 view .LVU475
  192:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       {
  1511              		.loc 1 192 22 is_stmt 0 view .LVU476
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 57
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 57
 
 
  1512 0058 A568     		ldr	r5, [r4, #8]
@@ -3418,7 +3418,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1552              		.loc 1 154 9 is_stmt 1 view .LVU490
  154:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c ****       }
  1553              		.loc 1 154 34 is_stmt 0 view .LVU491
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 58
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 58
 
 
  1554 008a 174B     		ldr	r3, .L129
@@ -3478,7 +3478,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1596 00c4 0746     		mov	r7, r0
  1597              	.LVL131:
  184:Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_flash_ex.c **** #endif
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 59
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 59
 
 
  1598              		.loc 1 184 7 is_stmt 1 view .LVU504
@@ -3535,64 +3535,64 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 1
  1639              	.LFE384:
  1641              		.text
  1642              	.Letext0:
- 1643              		.file 2 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
- 1644              		.file 3 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 1643              		.file 2 "C:/Users/adisa/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 1644              		.file 3 "C:/Users/adisa/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
  1645              		.file 4 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l432xx.h"
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 60
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 60
 
 
  1646              		.file 5 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_def.h"
  1647              		.file 6 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_flash.h"
  1648              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_dma.h"
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s 			page 61
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s 			page 61
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 stm32l4xx_hal_flash_ex.c
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:21     .text.FLASH_MassErase:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:26     .text.FLASH_MassErase:00000000 FLASH_MassErase
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:55     .text.FLASH_MassErase:0000001c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:60     .text.FLASH_OB_GetWRP:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:65     .text.FLASH_OB_GetWRP:00000000 FLASH_OB_GetWRP
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:127    .text.FLASH_OB_GetWRP:00000030 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:132    .text.FLASH_OB_GetRDP:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:137    .text.FLASH_OB_GetRDP:00000000 FLASH_OB_GetRDP
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:174    .text.FLASH_OB_GetRDP:0000001c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:179    .text.FLASH_OB_GetUser:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:184    .text.FLASH_OB_GetUser:00000000 FLASH_OB_GetUser
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:206    .text.FLASH_OB_GetUser:0000000c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:211    .text.FLASH_OB_GetPCROP:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:216    .text.FLASH_OB_GetPCROP:00000000 FLASH_OB_GetPCROP
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:291    .text.FLASH_OB_GetPCROP:0000003c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:297    .text.FLASH_OB_WRPConfig:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:302    .text.FLASH_OB_WRPConfig:00000000 FLASH_OB_WRPConfig
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:384    .text.FLASH_OB_WRPConfig:00000058 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:389    .text.FLASH_OB_RDPConfig:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:394    .text.FLASH_OB_RDPConfig:00000000 FLASH_OB_RDPConfig
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:452    .text.FLASH_OB_RDPConfig:00000038 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:457    .text.FLASH_OB_UserConfig:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:462    .text.FLASH_OB_UserConfig:00000000 FLASH_OB_UserConfig
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:740    .text.FLASH_OB_UserConfig:0000010c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:745    .text.FLASH_OB_PCROPConfig:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:750    .text.FLASH_OB_PCROPConfig:00000000 FLASH_OB_PCROPConfig
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:847    .text.FLASH_OB_PCROPConfig:00000064 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:852    .text.HAL_FLASHEx_OBProgram:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:858    .text.HAL_FLASHEx_OBProgram:00000000 HAL_FLASHEx_OBProgram
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1018   .text.HAL_FLASHEx_OBProgram:00000090 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1023   .text.HAL_FLASHEx_OBGetConfig:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1029   .text.HAL_FLASHEx_OBGetConfig:00000000 HAL_FLASHEx_OBGetConfig
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1107   .text.FLASH_PageErase:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1113   .text.FLASH_PageErase:00000000 FLASH_PageErase
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1146   .text.FLASH_PageErase:00000024 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1151   .text.HAL_FLASHEx_Erase_IT:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1157   .text.HAL_FLASHEx_Erase_IT:00000000 HAL_FLASHEx_Erase_IT
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1322   .text.HAL_FLASHEx_Erase_IT:000000a8 $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1328   .text.FLASH_FlushCaches:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1334   .text.FLASH_FlushCaches:00000000 FLASH_FlushCaches
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1413   .text.FLASH_FlushCaches:0000005c $d
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1419   .text.HAL_FLASHEx_Erase:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1425   .text.HAL_FLASHEx_Erase:00000000 HAL_FLASHEx_Erase
-C:\Users\kerry\AppData\Local\Temp\ccLh43ty.s:1636   .text.HAL_FLASHEx_Erase:000000e8 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:21     .text.FLASH_MassErase:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:26     .text.FLASH_MassErase:00000000 FLASH_MassErase
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:55     .text.FLASH_MassErase:0000001c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:60     .text.FLASH_OB_GetWRP:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:65     .text.FLASH_OB_GetWRP:00000000 FLASH_OB_GetWRP
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:127    .text.FLASH_OB_GetWRP:00000030 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:132    .text.FLASH_OB_GetRDP:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:137    .text.FLASH_OB_GetRDP:00000000 FLASH_OB_GetRDP
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:174    .text.FLASH_OB_GetRDP:0000001c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:179    .text.FLASH_OB_GetUser:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:184    .text.FLASH_OB_GetUser:00000000 FLASH_OB_GetUser
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:206    .text.FLASH_OB_GetUser:0000000c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:211    .text.FLASH_OB_GetPCROP:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:216    .text.FLASH_OB_GetPCROP:00000000 FLASH_OB_GetPCROP
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:291    .text.FLASH_OB_GetPCROP:0000003c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:297    .text.FLASH_OB_WRPConfig:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:302    .text.FLASH_OB_WRPConfig:00000000 FLASH_OB_WRPConfig
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:384    .text.FLASH_OB_WRPConfig:00000058 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:389    .text.FLASH_OB_RDPConfig:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:394    .text.FLASH_OB_RDPConfig:00000000 FLASH_OB_RDPConfig
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:452    .text.FLASH_OB_RDPConfig:00000038 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:457    .text.FLASH_OB_UserConfig:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:462    .text.FLASH_OB_UserConfig:00000000 FLASH_OB_UserConfig
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:740    .text.FLASH_OB_UserConfig:0000010c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:745    .text.FLASH_OB_PCROPConfig:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:750    .text.FLASH_OB_PCROPConfig:00000000 FLASH_OB_PCROPConfig
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:847    .text.FLASH_OB_PCROPConfig:00000064 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:852    .text.HAL_FLASHEx_OBProgram:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:858    .text.HAL_FLASHEx_OBProgram:00000000 HAL_FLASHEx_OBProgram
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1018   .text.HAL_FLASHEx_OBProgram:00000090 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1023   .text.HAL_FLASHEx_OBGetConfig:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1029   .text.HAL_FLASHEx_OBGetConfig:00000000 HAL_FLASHEx_OBGetConfig
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1107   .text.FLASH_PageErase:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1113   .text.FLASH_PageErase:00000000 FLASH_PageErase
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1146   .text.FLASH_PageErase:00000024 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1151   .text.HAL_FLASHEx_Erase_IT:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1157   .text.HAL_FLASHEx_Erase_IT:00000000 HAL_FLASHEx_Erase_IT
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1322   .text.HAL_FLASHEx_Erase_IT:000000a8 $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1328   .text.FLASH_FlushCaches:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1334   .text.FLASH_FlushCaches:00000000 FLASH_FlushCaches
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1413   .text.FLASH_FlushCaches:0000005c $d
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1419   .text.HAL_FLASHEx_Erase:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1425   .text.HAL_FLASHEx_Erase:00000000 HAL_FLASHEx_Erase
+C:\Users\adisa\AppData\Local\Temp\ccSo2zWk.s:1636   .text.HAL_FLASHEx_Erase:000000e8 $d
 
 UNDEFINED SYMBOLS
 FLASH_WaitForLastOperation

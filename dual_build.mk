@@ -1,7 +1,7 @@
 # Dual-bank wrapper for the Cube-generated Makefile.
 # Produces Bank A and Bank B application binaries in one build invocation.
 
-BASE_TARGET ?= Baby_MOBO
+BASE_TARGET ?= MOBO
 INNER_MAKE ?= Makefile
 COMMON_BUILD_DIR ?= build/debug
 

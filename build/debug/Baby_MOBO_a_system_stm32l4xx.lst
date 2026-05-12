@@ -1,4 +1,4 @@
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 1
 
 
    1              		.cpu cortex-m4
@@ -58,7 +58,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
   28:Core/Src/system_stm32l4xx.c ****   *        System Clock source                    | MSI
   29:Core/Src/system_stm32l4xx.c ****   *-----------------------------------------------------------------------------
   30:Core/Src/system_stm32l4xx.c ****   *        SYSCLK(Hz)                             | 4000000
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 2
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 2
 
 
   31:Core/Src/system_stm32l4xx.c ****   *-----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
   85:Core/Src/system_stm32l4xx.c ****   */
   86:Core/Src/system_stm32l4xx.c **** 
   87:Core/Src/system_stm32l4xx.c **** /** @addtogroup STM32L4xx_System_Private_Includes
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 3
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 3
 
 
   88:Core/Src/system_stm32l4xx.c ****   * @{
@@ -178,7 +178,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  142:Core/Src/system_stm32l4xx.c **** #define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table offset field.
  143:Core/Src/system_stm32l4xx.c ****                                                      This value must be a multiple of 0x200. */
  144:Core/Src/system_stm32l4xx.c **** #endif /* VECT_TAB_OFFSET */
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 4
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 4
 
 
  145:Core/Src/system_stm32l4xx.c **** 
@@ -238,7 +238,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  199:Core/Src/system_stm32l4xx.c **** void SystemInit(void)
  200:Core/Src/system_stm32l4xx.c **** {
   29              		.loc 1 200 1 view -0
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 5
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 5
 
 
   30              		.cfi_startproc
@@ -298,7 +298,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  223:Core/Src/system_stm32l4xx.c ****   *           frequency in the chip. It is calculated based on the predefined
  224:Core/Src/system_stm32l4xx.c ****   *           constant and the selected clock source:
  225:Core/Src/system_stm32l4xx.c ****   *
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 6
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 6
 
 
  226:Core/Src/system_stm32l4xx.c ****   *           - If SYSCLK source is MSI, SystemCoreClock will contain the MSI_VALUE(*)
@@ -358,7 +358,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
   83              	.LVL0:
   84              	.L6:
  261:Core/Src/system_stm32l4xx.c ****   }
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 7
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 7
 
 
  262:Core/Src/system_stm32l4xx.c ****   else
@@ -418,7 +418,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  272:Core/Src/system_stm32l4xx.c ****     case 0x00:  /* MSI used as system clock source */
  273:Core/Src/system_stm32l4xx.c ****       SystemCoreClock = msirange;
  126              		.loc 1 273 7 is_stmt 1 view .LVU24
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 8
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 8
 
 
  127              		.loc 1 273 23 is_stmt 0 view .LVU25
@@ -478,7 +478,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  165              		.loc 1 289 49 view .LVU40
  166 0062 C3F30213 		ubfx	r3, r3, #4, #3
  167              		.loc 1 289 12 view .LVU41
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 9
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 9
 
 
  168 0066 0133     		adds	r3, r3, #1
@@ -538,7 +538,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  202 0084 02FB03F3 		mul	r3, r2, r3
  203              	.LVL16:
  306:Core/Src/system_stm32l4xx.c ****       pllr = (((RCC->PLLCFGR & RCC_PLLCFGR_PLLR) >> 25U) + 1U) * 2U;
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 10
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 10
 
 
  204              		.loc 1 306 7 is_stmt 1 view .LVU55
@@ -598,7 +598,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  316:Core/Src/system_stm32l4xx.c ****   tmp = AHBPrescTable[((RCC->CFGR & RCC_CFGR_HPRE) >> 4U)];
  245              		.loc 1 316 3 view .LVU72
  246              		.loc 1 316 28 is_stmt 0 view .LVU73
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 11
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 11
 
 
  247 00a8 054B     		ldr	r3, .L19
@@ -658,7 +658,7 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  302              		.align	2
  305              	AHBPrescTable:
  306 0000 00000000 		.ascii	"\000\000\000\000\000\000\000\000\001\002\003\004\006"
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 12
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 12
 
 
  306      00000000 
@@ -672,33 +672,33 @@ ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 1
  314 0000 00093D00 		.word	4000000
  315              		.text
  316              	.Letext0:
- 317              		.file 2 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
- 318              		.file 3 "C:/Users/kerry/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 317              		.file 2 "C:/Users/adisa/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
+ 318              		.file 3 "C:/Users/adisa/AppData/Roaming/Code/User/globalStorage/bmd.stm32-for-vscode/@xpack-dev-to
  319              		.file 4 "Drivers/CMSIS/Include/core_cm4.h"
  320              		.file 5 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/system_stm32l4xx.h"
  321              		.file 6 "Drivers/CMSIS/Device/ST/STM32L4xx/Include/stm32l432xx.h"
  322              		.file 7 "Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_ll_dma.h"
-ARM GAS  C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s 			page 13
+ARM GAS  C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s 			page 13
 
 
 DEFINED SYMBOLS
                             *ABS*:00000000 system_stm32l4xx.c
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:21     .text.SystemInit:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:27     .text.SystemInit:00000000 SystemInit
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:50     .text.SystemInit:00000014 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:56     .text.SystemCoreClockUpdate:00000000 $t
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:62     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:101    .text.SystemCoreClockUpdate:0000002a $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:266    .text.SystemCoreClockUpdate:000000c0 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:280    .rodata.MSIRangeTable:00000000 MSIRangeTable
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:313    .data.SystemCoreClock:00000000 SystemCoreClock
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:305    .rodata.AHBPrescTable:00000000 AHBPrescTable
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:277    .rodata.MSIRangeTable:00000000 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:298    .rodata.APBPrescTable:00000000 APBPrescTable
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:295    .rodata.APBPrescTable:00000000 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:302    .rodata.AHBPrescTable:00000000 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:310    .data.SystemCoreClock:00000000 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:115    .text.SystemCoreClockUpdate:00000037 $d
-C:\Users\kerry\AppData\Local\Temp\ccb48Rlb.s:115    .text.SystemCoreClockUpdate:00000038 $t
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:21     .text.SystemInit:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:27     .text.SystemInit:00000000 SystemInit
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:50     .text.SystemInit:00000014 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:56     .text.SystemCoreClockUpdate:00000000 $t
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:62     .text.SystemCoreClockUpdate:00000000 SystemCoreClockUpdate
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:101    .text.SystemCoreClockUpdate:0000002a $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:266    .text.SystemCoreClockUpdate:000000c0 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:280    .rodata.MSIRangeTable:00000000 MSIRangeTable
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:313    .data.SystemCoreClock:00000000 SystemCoreClock
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:305    .rodata.AHBPrescTable:00000000 AHBPrescTable
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:277    .rodata.MSIRangeTable:00000000 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:298    .rodata.APBPrescTable:00000000 APBPrescTable
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:295    .rodata.APBPrescTable:00000000 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:302    .rodata.AHBPrescTable:00000000 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:310    .data.SystemCoreClock:00000000 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:115    .text.SystemCoreClockUpdate:00000037 $d
+C:\Users\adisa\AppData\Local\Temp\ccHWwUO0.s:115    .text.SystemCoreClockUpdate:00000038 $t
 
 NO UNDEFINED SYMBOLS

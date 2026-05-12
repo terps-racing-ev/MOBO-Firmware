@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "can.h"
+#include "managers/can_manager.h"
 
 /* USER CODE END Includes */
 
@@ -68,16 +68,28 @@ const osThreadAttr_t LED_Blink_attributes = {
   .stack_size = sizeof(LED_BlinkBuffer),
   .priority = (osPriority_t) osPriorityNormal,
 };
-/* Definitions for can_messages */
-osThreadId_t can_messagesHandle;
-uint32_t can_messagesBuffer[ 128 ];
-osStaticThreadDef_t can_messagesControlBlock;
-const osThreadAttr_t can_messages_attributes = {
-  .name = "can_messages",
-  .cb_mem = &can_messagesControlBlock,
-  .cb_size = sizeof(can_messagesControlBlock),
-  .stack_mem = &can_messagesBuffer[0],
-  .stack_size = sizeof(can_messagesBuffer),
+/* Definitions for CANManager */
+osThreadId_t CANManagerHandle;
+uint32_t CANManagerBuffer[ 128 ];
+osStaticThreadDef_t CANManagerControlBlock;
+const osThreadAttr_t CANManager_attributes = {
+  .name = "CANManager",
+  .cb_mem = &CANManagerControlBlock,
+  .cb_size = sizeof(CANManagerControlBlock),
+  .stack_mem = &CANManagerBuffer[0],
+  .stack_size = sizeof(CANManagerBuffer),
+  .priority = (osPriority_t) osPriorityNormal,
+};
+/* Definitions for IOManager */
+osThreadId_t IOManagerHandle;
+uint32_t IOManagerBuffer[ 128 ];
+osStaticThreadDef_t IOManagerControlBlock;
+const osThreadAttr_t IOManager_attributes = {
+  .name = "IOManager",
+  .cb_mem = &IOManagerControlBlock,
+  .cb_size = sizeof(IOManagerControlBlock),
+  .stack_mem = &IOManagerBuffer[0],
+  .stack_size = sizeof(IOManagerBuffer),
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
@@ -92,7 +104,8 @@ static void MX_CRC_Init(void);
 static void MX_ADC1_Init(void);
 void StartDefaultTask(void *argument);
 void LED_BlinkTask(void *argument);
-void can_messages_task(void *argument);
+void CAN_ManagerTask(void *argument);
+void IOManagerTask(void *argument);
 
 /* USER CODE BEGIN PFP */
 static void MX_CAN1_Filter_Init(void);
@@ -183,8 +196,11 @@ int main(void)
   /* creation of LED_Blink */
   LED_BlinkHandle = osThreadNew(LED_BlinkTask, NULL, &LED_Blink_attributes);
 
-  /* creation of can_messages */
-  can_messagesHandle = osThreadNew(can_messages_task, NULL, &can_messages_attributes);
+  /* creation of CANManager */
+  CANManagerHandle = osThreadNew(CAN_ManagerTask, NULL, &CANManager_attributes);
+
+  /* creation of IOManager */
+  IOManagerHandle = osThreadNew(IOManagerTask, NULL, &IOManager_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
@@ -513,20 +529,40 @@ void LED_BlinkTask(void *argument)
   /* USER CODE END LED_BlinkTask */
 }
 
-/* USER CODE BEGIN Header_can_messages_task */
+/* USER CODE BEGIN Header_CAN_ManagerTask */
 /**
-* @brief Function implementing the can_messages thread.
+* @brief Function implementing the CANManager thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_can_messages_task */
-void can_messages_task(void *argument)
+/* USER CODE END Header_CAN_ManagerTask */
+__weak void CAN_ManagerTask(void *argument)
 {
-  /* USER CODE BEGIN can_messages_task */
-  CAN_Task(argument);
+  /* USER CODE BEGIN CAN_ManagerTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END CAN_ManagerTask */
+}
 
-
-  /* USER CODE END can_messages_task */
+/* USER CODE BEGIN Header_IOManagerTask */
+/**
+* @brief Function implementing the IOManager thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_IOManagerTask */
+__weak void IOManagerTask(void *argument)
+{
+  /* USER CODE BEGIN IOManagerTask */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END IOManagerTask */
 }
 
 /**
