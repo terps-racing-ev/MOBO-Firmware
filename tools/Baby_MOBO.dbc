@@ -32,55 +32,109 @@ NS_ :
 
 BS_:
 
-BU_: Baby_MOBO Host_Tool
+BU_: Baby_MOBO Host_Tool VCU
 
-BO_ 2149581296 MOBO_Summary: 8 Baby_MOBO
- SG_ Heartbeat_Toggle : 0|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ SDC_1 : 8|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ SDC_2 : 9|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ SDC_3 : 10|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ BMS : 11|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ BSPD : 12|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ IMD : 13|1@1+ (1,0) [0|1] "" Host_Tool
+BO_ 2149580800 MOBO_Heartbeat: 8 Baby_MOBO
+ SG_ System_State : 0|8@1+ (1,0) [0|2] "" Host_Tool
+ SG_ Heartbeat_Counter : 8|8@1+ (1,0) [0|255] "" Host_Tool
+ SG_ Fault_Count : 16|8@1+ (1,0) [0|255] "" Host_Tool
+ SG_ Error_Summary : 24|32@1+ (1,0) [0|4294967295] "" Host_Tool
+ SG_ Has_Warnings : 56|8@1+ (1,0) [0|1] "" Host_Tool
 
-BO_ 2149581038 MOBO_Power_Info: 8 Baby_MOBO
+BO_ 2149580801 MOBO_Errors: 8 Baby_MOBO
+ SG_ Error_Flags : 0|32@1+ (1,0) [0|4294967295] "" Host_Tool
+ SG_ Warning_Flags : 32|32@1+ (1,0) [0|4294967295] "" Host_Tool
+
+BO_ 2149580802 MOBO_CAN_Stats: 8 Baby_MOBO
+ SG_ TX_Success : 0|16@1+ (1,0) [0|65535] "" Host_Tool
+ SG_ TX_Failures : 16|16@1+ (1,0) [0|65535] "" Host_Tool
+ SG_ RX_Messages : 32|16@1+ (1,0) [0|65535] "" Host_Tool
+ SG_ RX_Drops : 48|16@1+ (1,0) [0|65535] "" Host_Tool
+
+BO_ 2149580816 MOBO_Power_Telemetry: 8 Baby_MOBO
  SG_ Battery_Voltage : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+ SG_ FiveV_Sense : 16|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+ SG_ Brake_Input : 32|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
+ SG_ LV_Current_Raw : 48|16@1+ (1,0) [0|4095] "count" Host_Tool
 
-BO_ 2149581552 MOBO_LC_Summary: 8 Baby_MOBO
- SG_ FiveV_Sense : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
- SG_ Brake_Input : 16|16@1+ (0.001,0) [0|65.535] "V" Host_Tool
- SG_ LV_Current : 32|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+BO_ 2149580832 MOBO_Current_Telemetry: 8 Baby_MOBO
+ SG_ LV_Current : 0|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+ SG_ HC_Current : 16|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+ SG_ LV_Current_Peak : 32|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
+ SG_ HC_Current_Peak : 48|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
 
-BO_ 2149581808 MOBO_HC_Summary: 8 Baby_MOBO
- SG_ HC_Current : 0|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool
- SG_ Pump_Cmd : 16|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ DRS_Cmd : 17|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ Fans_Cmd : 18|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ Rad_Cmd : 19|1@1+ (1,0) [0|1] "" Host_Tool
+BO_ 2149580848 MOBO_Safety_Status: 8 Baby_MOBO
+ SG_ SDC1_Raw : 0|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC2_Raw : 1|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC3_Raw : 2|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BMS_Raw : 3|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BSPD_Raw : 4|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ IMD_Raw : 5|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC1_Debounced : 8|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC2_Debounced : 9|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC3_Debounced : 10|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BMS_Debounced : 11|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BSPD_Debounced : 12|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ IMD_Debounced : 13|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC1_Latched : 16|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC2_Latched : 17|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ SDC3_Latched : 18|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BMS_Latched : 19|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ BSPD_Latched : 20|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ IMD_Latched : 21|1@1+ (1,0) [0|1] "" Host_Tool
 
-BO_ 2151678455 CAN_Reset_Command: 8 Host_Tool
- SG_ Reset_Command_Raw : 0|64@1+ (1,0) [0|18446744073709551615] "" Baby_MOBO
+BO_ 2149580864 MOBO_Relay_Status: 8 Baby_MOBO
+ SG_ Pump_Commanded : 0|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ DRS_Commanded : 1|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Fans_Commanded : 2|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Rad_Commanded : 3|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Pump_Actual : 8|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ DRS_Actual : 9|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Fans_Actual : 10|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Rad_Actual : 11|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Pump_State : 16|4@1+ (1,0) [0|4] "" Host_Tool
+ SG_ DRS_State : 20|4@1+ (1,0) [0|4] "" Host_Tool
+ SG_ Fans_State : 24|4@1+ (1,0) [0|4] "" Host_Tool
+ SG_ Rad_State : 28|4@1+ (1,0) [0|4] "" Host_Tool
+ SG_ Reserved_B4 : 32|8@1+ (1,0) [0|255] "" Host_Tool
+ SG_ Ms_Since_Cmd : 40|16@1+ (1,0) [0|65535] "ms" Host_Tool
 
-CM_ BO_ 2149581296 "Periodic MOBO summary frame from CAN_MOBO_Summary(); only heartbeat toggle in byte 0 is currently active.";
-CM_ BO_ 2149581038 "Battery sense reading from ADC1_IN5 with only bytes 0-1 used for battery voltage.";
-CM_ BO_ 2149581552 "Low-current summary from ADC1_IN7, ADC1_IN6, and ADC1_IN8 with only FiveV, Brake, and LV current bytes active.";
-CM_ BO_ 2149581808 "High-current summary from ADC1_IN11 with current in bytes 0-1 and output command bits in byte 2.";
-CM_ BO_ 2151678455 "Send this extended ID to trigger NVIC_SystemReset() in CAN_ProcessRXQueue().";
+BO_ 2149581296 VCU_MOBO_Command: 8 VCU
+ SG_ Enable : 0|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ Pump_Request : 8|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ DRS_Request : 9|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ Fans_Request : 10|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ Rad_Request : 11|1@1+ (1,0) [0|1] "" Baby_MOBO
 
-VAL_ 2149581296 Heartbeat_Toggle 0 "Off" 1 "On";
-VAL_ 2149581296 SDC_1 0 "Inactive" 1 "Active";
-VAL_ 2149581296 SDC_2 0 "Inactive" 1 "Active";
-VAL_ 2149581296 SDC_3 0 "Inactive" 1 "Active";
-VAL_ 2149581296 BMS 0 "Inactive" 1 "Active";
-VAL_ 2149581296 BSPD 0 "Inactive" 1 "Active";
-VAL_ 2149581296 IMD 0 "Inactive" 1 "Active";
-VAL_ 2149581808 Pump_Cmd 0 "Off" 1 "On";
-VAL_ 2149581808 DRS_Cmd 0 "Off" 1 "On";
-VAL_ 2149581808 Fans_Cmd 0 "Off" 1 "On";
-VAL_ 2149581808 Rad_Cmd 0 "Off" 1 "On";
+BO_ 2149581303 MOBO_Reset_Command: 8 Host_Tool
+ SG_ Ignored : 0|8@1+ (1,0) [0|255] "" Baby_MOBO
+
+BO_ 2149581304 MOBO_Config_Command: 8 Host_Tool
+ SG_ Param_ID : 0|8@1+ (1,0) [0|255] "" Baby_MOBO
+ SG_ Value : 8|32@1- (1,0) [-2147483648|2147483647] "" Baby_MOBO
+
+CM_ BO_ 2149580800 "100 ms heartbeat. State (0=INIT,1=STANDBY,2=ACTIVE). MOBO never self-faults.";
+CM_ BO_ 2149580801 "Full 32-bit error and warning bitmasks (pure telemetry).";
+CM_ BO_ 2149580802 "CAN TX/RX counters (lower 16 bits).";
+CM_ BO_ 2149580816 "Battery, 5V rail, brake-input voltage, and raw LV current ADC count.";
+CM_ BO_ 2149580832 "LV and HC current with running peaks.";
+CM_ BO_ 2149580848 "Safety inputs: raw, debounced, and latched (telemetry only).";
+CM_ BO_ 2149580864 "Commanded vs actual relay state with per-channel FSM.";
+CM_ BO_ 2149581296 "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask. Only command source MOBO honors.";
+CM_ BO_ 2149581303 "System reset; any frame on this ID triggers a reset and payload is ignored.";
+CM_ BO_ 2149581304 "Runtime config write. Param_ID per CONFIG_PARAM_* in config_manager.h.";
 
 BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;
-BA_ "GenMsgCycleTime" BO_ 2149581296 1000;
-BA_ "GenMsgCycleTime" BO_ 2149581038 1000;
-BA_ "GenMsgCycleTime" BO_ 2149581552 1000;
-BA_ "GenMsgCycleTime" BO_ 2149581808 1000;
+BA_ "GenMsgCycleTime" BO_ 2149580800 100;
+BA_ "GenMsgCycleTime" BO_ 2149580801 500;
+BA_ "GenMsgCycleTime" BO_ 2149580802 1000;
+BA_ "GenMsgCycleTime" BO_ 2149580816 200;
+BA_ "GenMsgCycleTime" BO_ 2149580832 100;
+BA_ "GenMsgCycleTime" BO_ 2149580848 100;
+BA_ "GenMsgCycleTime" BO_ 2149580864 100;
+
+VAL_ 2149580800 System_State 0 "INIT" 1 "STANDBY" 2 "ACTIVE";
+VAL_ 2149580864 Pump_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
+VAL_ 2149580864 DRS_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
+VAL_ 2149580864 Fans_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
+VAL_ 2149580864 Rad_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";

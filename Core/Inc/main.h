@@ -63,12 +63,12 @@ void Error_Handler(void);
 #define Brake_In_GPIO_Port GPIOA
 #define Five_Sense_Pin GPIO_PIN_2
 #define Five_Sense_GPIO_Port GPIOA
-#define LV_Curr_Pin GPIO_PIN_3
-#define LV_Curr_GPIO_Port GPIOA
+#define SDC_1_Pin GPIO_PIN_3
+#define SDC_1_GPIO_Port GPIOA
 #define SDC_3_Pin GPIO_PIN_4
 #define SDC_3_GPIO_Port GPIOA
-#define SDC_1_Pin GPIO_PIN_5
-#define SDC_1_GPIO_Port GPIOA
+#define LV_Curr_Pin GPIO_PIN_5
+#define LV_Curr_GPIO_Port GPIOA
 #define HC_Curr_Pin GPIO_PIN_6
 #define HC_Curr_GPIO_Port GPIOA
 #define RAD_Ctrl_Pin GPIO_PIN_7

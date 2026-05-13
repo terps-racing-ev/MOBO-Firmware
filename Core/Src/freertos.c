@@ -55,5 +55,27 @@
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
 
+/**
+ * @brief FreeRTOS hook called when pvPortMalloc fails. Routed to
+ *        Error_Handler so the LD3 strobe pattern surfaces the cause.
+ */
+void vApplicationMallocFailedHook(void)
+{
+    Error_Handler();
+}
+
+/**
+ * @brief FreeRTOS hook called when a task overflows its stack. Routed to
+ *        Error_Handler. Both arguments are intentionally unused \u2014 the
+ *        strobe just tells us "stack overflow"; pin down the offender by
+ *        increasing stack sizes incrementally.
+ */
+void vApplicationStackOverflowHook(TaskHandle_t xTask, char *pcTaskName)
+{
+    (void)xTask;
+    (void)pcTaskName;
+    Error_Handler();
+}
+
 /* USER CODE END Application */
 

@@ -22,7 +22,15 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "can.h"
+#include "config_manager.h"
+#include "error_manager.h"
+#include "state_machine.h"
+#include "power_manager.h"
+#include "sensor_manager.h"
+#include "safety_monitor.h"
+#include "can_manager.h"
+#include "coolant_pump.h"
+#include "watchdog.h"
 
 /* USER CODE END Includes */
 
@@ -81,6 +89,30 @@ const osThreadAttr_t can_messages_attributes = {
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* USER CODE BEGIN PV */
+/* IWDG handle is owned by watchdog.c (started inside Watchdog_Init). */
+
+/* New task handles. Created in USER CODE BEGIN RTOS_THREADS. */
+static osThreadId_t s_can_task_handle;
+static osThreadId_t s_power_task_handle;
+static osThreadId_t s_sensor_task_handle;
+static osThreadId_t s_safety_task_handle;
+static osThreadId_t s_watchdog_task_handle;
+
+static const osThreadAttr_t s_can_task_attr = {
+    .name = "CAN_Mgr", .stack_size = 1024, .priority = (osPriority_t)osPriorityHigh,
+};
+static const osThreadAttr_t s_power_task_attr = {
+    .name = "PowerMgr", .stack_size = 512, .priority = (osPriority_t)osPriorityAboveNormal,
+};
+static const osThreadAttr_t s_sensor_task_attr = {
+    .name = "SensorMgr", .stack_size = 512, .priority = (osPriority_t)osPriorityNormal,
+};
+static const osThreadAttr_t s_safety_task_attr = {
+    .name = "SafetyMon", .stack_size = 384, .priority = (osPriority_t)osPriorityHigh,
+};
+static const osThreadAttr_t s_watchdog_task_attr = {
+    .name = "Watchdog", .stack_size = 256, .priority = (osPriority_t)osPriorityRealtime,
+};
 
 /* USER CODE END PV */
 
@@ -95,7 +127,6 @@ void LED_BlinkTask(void *argument);
 void can_messages_task(void *argument);
 
 /* USER CODE BEGIN PFP */
-static void MX_CAN1_Filter_Init(void);
 
 /* USER CODE END PFP */
 
@@ -112,6 +143,13 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
+  /* Coming from the bootloader: disable interrupts and quiesce SysTick
+   * before HAL_Init reconfigures the core. Mirrors BMS-Firmware-RTOS. */
+  __disable_irq();
+
+  SysTick->CTRL = 0;
+  SysTick->LOAD = 0;
+  SysTick->VAL  = 0;
 
   /* USER CODE END 1 */
 
@@ -137,17 +175,10 @@ int main(void)
   MX_CRC_Init();
   MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
-  MX_CAN1_Filter_Init();
-
-  if (HAL_CAN_Start(&hcan1) != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  if (HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING) != HAL_OK)
-  {
-    Error_Handler();
-  }
+  /* Pre-RTOS calibration. IWDG is started later from Watchdog_Init so the
+   * full LSI-tolerance window is available *after* all init and once the
+   * RTOS is up — mirrors the BMS firmware order. */
+  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
 
   /* USER CODE END 2 */
 
@@ -155,13 +186,19 @@ int main(void)
   osKernelInitialize();
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
-  if (CAN_Init() != HAL_OK)
-  {
-    Error_Handler();
-  }
-
-  HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED);
+  /* Initialize firmware modules. Order matters:
+   *  config -> errors -> state machine -> power -> sensors -> safety -> CAN -> watchdog */
+  if (Config_Init()        != HAL_OK) Error_Handler();
+  if (ErrorMgr_Init()      != HAL_OK) Error_Handler();
+  if (StateMachine_Init()  != HAL_OK) Error_Handler();
+  if (PowerMgr_Init()      != HAL_OK) Error_Handler();
+  if (Sensor_Init()        != HAL_OK) Error_Handler();
+  if (SafetyMonitor_Init() != HAL_OK) Error_Handler();
+  if (CoolantPump_Init()   != HAL_OK) Error_Handler();
+  if (CAN_Manager_Init()   != HAL_OK) Error_Handler();
+  /* Promote out of INIT now that everything is constructed. Safety monitor
+   * task will move STANDBY -> ACTIVE once safety inputs are clean. */
+  StateMachine_SetState(MOBO_STATE_STANDBY);
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
@@ -187,7 +224,17 @@ int main(void)
   can_messagesHandle = osThreadNew(can_messages_task, NULL, &can_messages_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+  s_can_task_handle      = osThreadNew(CAN_ManagerTask,    NULL, &s_can_task_attr);
+  s_power_task_handle    = osThreadNew(PowerMgrTask,       NULL, &s_power_task_attr);
+  s_sensor_task_handle   = osThreadNew(SensorTask,         NULL, &s_sensor_task_attr);
+  s_safety_task_handle   = osThreadNew(SafetyMonitorTask,  NULL, &s_safety_task_attr);
+  /* WatchdogTask intentionally NOT created — watchdog disabled. */
+  (void)s_watchdog_task_handle;
+  (void)s_watchdog_task_attr;
+  if (s_can_task_handle == NULL || s_power_task_handle == NULL ||
+      s_sensor_task_handle == NULL || s_safety_task_handle == NULL) {
+    Error_Handler();
+  }
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */
@@ -446,27 +493,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-static void MX_CAN1_Filter_Init(void)
-{
-  CAN_FilterTypeDef canFilterConfig = {0};
-
-  canFilterConfig.FilterBank = 0;
-  canFilterConfig.FilterMode = CAN_FILTERMODE_IDMASK;
-  canFilterConfig.FilterScale = CAN_FILTERSCALE_32BIT;
-  canFilterConfig.FilterIdHigh = 0x0000;
-  canFilterConfig.FilterIdLow = 0x0000;
-  canFilterConfig.FilterMaskIdHigh = 0x0000;
-  canFilterConfig.FilterMaskIdLow = 0x0000;
-  canFilterConfig.FilterFIFOAssignment = CAN_FILTER_FIFO0;
-  canFilterConfig.FilterActivation = ENABLE;
-  canFilterConfig.SlaveStartFilterBank = 14;
-
-  if (HAL_CAN_ConfigFilter(&hcan1, &canFilterConfig) != HAL_OK)
-  {
-    Error_Handler();
-  }
-}
-
+/* USER CODE END 4 */
 
 /* USER CODE END 4 */
 
@@ -523,9 +550,13 @@ void LED_BlinkTask(void *argument)
 void can_messages_task(void *argument)
 {
   /* USER CODE BEGIN can_messages_task */
-  CAN_Task(argument);
-
-
+  /* Legacy CubeMX-generated task entry retained for ABI but unused; the
+   * actual CAN manager runs as `s_can_task_handle` started in USER CODE
+   * BEGIN RTOS_THREADS. Park this thread harmlessly. */
+  (void)argument;
+  for(;;) {
+    osDelay(60000);
+  }
   /* USER CODE END can_messages_task */
 }
 

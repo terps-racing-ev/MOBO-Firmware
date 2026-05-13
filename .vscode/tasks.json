@@ -62,6 +62,23 @@
         "problemMatcher": [
             "$gcc"
         ]
+    },
+    {
+        "label": "Build + Push BINs (zfpi)",
+        "type": "shell",
+        "command": "$ErrorActionPreference='Stop'; make -f dual_build.mk; if (!(Test-Path 'build/debug/Baby_MOBO_a.bin') -or !(Test-Path 'build/debug/Baby_MOBO_b.bin')) { throw 'Expected .bin outputs not found in build/debug.' }; ssh ali@zfpi.local \"mkdir -p /home/ali/mobofirmware\"; scp build/debug/Baby_MOBO_a.bin build/debug/Baby_MOBO_b.bin ali@zfpi.local:/home/ali/mobofirmware/",
+        "options": {
+            "cwd": "${workspaceFolder}",
+            "shell": {
+                "executable": "pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        },
+        "group": "build",
+        "problemMatcher": []
     }
 ]
 }

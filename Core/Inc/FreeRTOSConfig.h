@@ -62,13 +62,19 @@
 #define configUSE_PREEMPTION                     1
 #define configSUPPORT_STATIC_ALLOCATION          1
 #define configSUPPORT_DYNAMIC_ALLOCATION         1
+#define configUSE_MALLOC_FAILED_HOOK             1
+#define configCHECK_FOR_STACK_OVERFLOW           2
 #define configUSE_IDLE_HOOK                      0
 #define configUSE_TICK_HOOK                      0
 #define configCPU_CLOCK_HZ                       ( SystemCoreClock )
 #define configTICK_RATE_HZ                       ((TickType_t)1000)
 #define configMAX_PRIORITIES                     ( 56 )
 #define configMINIMAL_STACK_SIZE                 ((uint16_t)128)
-#define configTOTAL_HEAP_SIZE                    ((size_t)3000)
+/* Bumped from CubeMX default 3000 — our 4 dynamic tasks (1024+512+512+384 B
+ * stacks) plus TCBs, queues and mutexes need ~5 KB; 12 KB matches BMS and
+ * leaves headroom. STM32L432KCUx has 64 KB SRAM so this is well within
+ * budget. */
+#define configTOTAL_HEAP_SIZE                    ((size_t)12000)
 #define configMAX_TASK_NAME_LEN                  ( 16 )
 #define configUSE_TRACE_FACILITY                 1
 #define configUSE_16_BIT_TICKS                   0

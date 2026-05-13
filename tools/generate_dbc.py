@@ -1,22 +1,57 @@
+"""Generate tools/Baby_MOBO.dbc for the rewritten MOBO firmware.
+
+The CAN protocol mirrors Core/Inc/can_ids.h. All IDs are 29-bit extended.
+Run from anywhere: `python tools/generate_dbc.py`.
+"""
+
 from pathlib import Path
 
 
-def dbc_extended_id(can_id: int) -> int:
-    return 0x80000000 | can_id
+# --- IDs (must mirror Core/Inc/can_ids.h) -----------------------------------
+MOBO_HEARTBEAT_ID         = 0x00200000
+MOBO_ERRORS_ID            = 0x00200001
+MOBO_CAN_STATS_ID         = 0x00200002
+MOBO_POWER_TELEMETRY_ID   = 0x00200010
+MOBO_CURRENT_TELEMETRY_ID = 0x00200020
+MOBO_SAFETY_STATUS_ID     = 0x00200030
+MOBO_RELAY_STATUS_ID      = 0x00200040
+
+MOBO_VCU_POWER_CMD_ID     = 0x002001F0
+MOBO_RESET_CMD_ID         = 0x002001F7
+MOBO_CONFIG_CMD_ID        = 0x002001F8
 
 
-def fmt_extended_id(can_id: int) -> str:
-    return str(dbc_extended_id(can_id))
+def ext(can_id: int) -> str:
+    """DBC representation of a 29-bit extended ID."""
+    return str(0x80000000 | can_id)
+
+
+def msg(can_id: int, name: str, dlc: int, sender: str, signals: list[str]) -> list[str]:
+    out = [f"BO_ {ext(can_id)} {name}: {dlc} {sender}"]
+    out.extend(signals)
+    out.append("")
+    return out
+
+
+# Signal helpers -----------------------------------------------------------
+def sig(name: str, start: int, length: int, signed: bool, factor: float, offset: float,
+        smin: float, smax: float, unit: str, receiver: str) -> str:
+    sign = "-" if signed else "+"
+    fmt = (f' SG_ {name} : {start}|{length}@1{sign} ({factor},{offset}) '
+           f'[{smin}|{smax}] "{unit}" {receiver}')
+    return fmt
+
+
+def bit(name: str, start: int, receiver: str) -> str:
+    return f' SG_ {name} : {start}|1@1+ (1,0) [0|1] "" {receiver}'
 
 
 def build_dbc() -> str:
-    mobo_summary_id = 0x002001F0
-    mobo_power_info_id = 0x002000EE
-    mobo_lc_summary_id = 0x002002F0
-    mobo_hc_summary_id = 0x002003F0
-    reset_cmd_id = 0x004001F7
+    HOST = "Host_Tool"
+    VCU  = "VCU"
+    MOBO = "Baby_MOBO"
 
-    lines = [
+    lines: list[str] = [
         'VERSION ""',
         "",
         "NS_ :",
@@ -51,90 +86,130 @@ def build_dbc() -> str:
         "",
         "BS_:",
         "",
-        "BU_: Baby_MOBO Host_Tool",
+        f"BU_: {MOBO} {HOST} {VCU}",
         "",
-        f"BO_ {fmt_extended_id(mobo_summary_id)} MOBO_Summary: 8 Baby_MOBO",
-        ' SG_ Heartbeat_Toggle : 0|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ SDC_1 : 8|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ SDC_2 : 9|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ SDC_3 : 10|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ BMS : 11|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ BSPD : 12|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ IMD : 13|1@1+ (1,0) [0|1] "" Host_Tool',
+    ]
+
+    # --- TX (MOBO -> bus) ---------------------------------------------------
+    lines += msg(MOBO_HEARTBEAT_ID, "MOBO_Heartbeat", 8, MOBO, [
+        sig("System_State",      0, 8, False, 1, 0, 0, 2,     "",  HOST),
+        sig("Heartbeat_Counter", 8, 8, False, 1, 0, 0, 255,   "",  HOST),
+        sig("Fault_Count",      16, 8, False, 1, 0, 0, 255,   "",  HOST),
+        sig("Error_Summary",    24, 32, False, 1, 0, 0, 4294967295, "", HOST),
+        sig("Has_Warnings",     56, 8, False, 1, 0, 0, 1,     "",  HOST),
+    ])
+
+    lines += msg(MOBO_ERRORS_ID, "MOBO_Errors", 8, MOBO, [
+        sig("Error_Flags",   0, 32, False, 1, 0, 0, 4294967295, "", HOST),
+        sig("Warning_Flags", 32, 32, False, 1, 0, 0, 4294967295, "", HOST),
+    ])
+
+    lines += msg(MOBO_CAN_STATS_ID, "MOBO_CAN_Stats", 8, MOBO, [
+        sig("TX_Success",    0, 16, False, 1, 0, 0, 65535, "", HOST),
+        sig("TX_Failures",  16, 16, False, 1, 0, 0, 65535, "", HOST),
+        sig("RX_Messages",  32, 16, False, 1, 0, 0, 65535, "", HOST),
+        sig("RX_Drops",     48, 16, False, 1, 0, 0, 65535, "", HOST),
+    ])
+
+    lines += msg(MOBO_POWER_TELEMETRY_ID, "MOBO_Power_Telemetry", 8, MOBO, [
+        sig("Battery_Voltage", 0,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
+        sig("FiveV_Sense",    16,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
+        sig("Brake_Input",    32,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
+        sig("LV_Current_Raw", 48,  16, False, 1,     0, 0, 4095,   "count", HOST),
+    ])
+
+    lines += msg(MOBO_CURRENT_TELEMETRY_ID, "MOBO_Current_Telemetry", 8, MOBO, [
+        sig("LV_Current",       0, 16, True, 0.001, 0, -32.768, 32.767, "A", HOST),
+        sig("HC_Current",      16, 16, True, 0.001, 0, -32.768, 32.767, "A", HOST),
+        sig("LV_Current_Peak", 32, 16, True, 0.001, 0, -32.768, 32.767, "A", HOST),
+        sig("HC_Current_Peak", 48, 16, True, 0.001, 0, -32.768, 32.767, "A", HOST),
+    ])
+
+    lines += msg(MOBO_SAFETY_STATUS_ID, "MOBO_Safety_Status", 8, MOBO, [
+        bit("SDC1_Raw",    0, HOST),
+        bit("SDC2_Raw",    1, HOST),
+        bit("SDC3_Raw",    2, HOST),
+        bit("BMS_Raw",     3, HOST),
+        bit("BSPD_Raw",    4, HOST),
+        bit("IMD_Raw",     5, HOST),
+        bit("SDC1_Debounced",  8, HOST),
+        bit("SDC2_Debounced",  9, HOST),
+        bit("SDC3_Debounced", 10, HOST),
+        bit("BMS_Debounced",  11, HOST),
+        bit("BSPD_Debounced", 12, HOST),
+        bit("IMD_Debounced",  13, HOST),
+        bit("SDC1_Latched",  16, HOST),
+        bit("SDC2_Latched",  17, HOST),
+        bit("SDC3_Latched",  18, HOST),
+        bit("BMS_Latched",   19, HOST),
+        bit("BSPD_Latched",  20, HOST),
+        bit("IMD_Latched",   21, HOST),
+    ])
+
+    lines += msg(MOBO_RELAY_STATUS_ID, "MOBO_Relay_Status", 8, MOBO, [
+        bit("Pump_Commanded", 0, HOST),
+        bit("DRS_Commanded",  1, HOST),
+        bit("Fans_Commanded", 2, HOST),
+        bit("Rad_Commanded",  3, HOST),
+        bit("Pump_Actual",    8, HOST),
+        bit("DRS_Actual",     9, HOST),
+        bit("Fans_Actual",   10, HOST),
+        bit("Rad_Actual",    11, HOST),
+        sig("Pump_State",     16, 4, False, 1, 0, 0, 4, "", HOST),
+        sig("DRS_State",      20, 4, False, 1, 0, 0, 4, "", HOST),
+        sig("Fans_State",     24, 4, False, 1, 0, 0, 4, "", HOST),
+        sig("Rad_State",      28, 4, False, 1, 0, 0, 4, "", HOST),
+        sig("Reserved_B4",    32, 8, False, 1, 0, 0, 255, "", HOST),
+        sig("Ms_Since_Cmd",   40, 16, False, 1, 0, 0, 65535, "ms", HOST),
+    ])
+
+    # --- RX (commands) ------------------------------------------------------
+    lines += msg(MOBO_VCU_POWER_CMD_ID, "VCU_MOBO_Command", 8, VCU, [
+        bit("Enable",       0, MOBO),
+        bit("Pump_Request", 8, MOBO),
+        bit("DRS_Request",  9, MOBO),
+        bit("Fans_Request",10, MOBO),
+        bit("Rad_Request", 11, MOBO),
+    ])
+
+    lines += msg(MOBO_RESET_CMD_ID, "MOBO_Reset_Command", 8, HOST, [
+        sig("Ignored", 0, 8, False, 1, 0, 0, 255, "", MOBO),
+    ])
+
+    lines += msg(MOBO_CONFIG_CMD_ID, "MOBO_Config_Command", 8, HOST, [
+        sig("Param_ID", 0, 8, False, 1, 0, 0, 255, "", MOBO),
+        sig("Value",    8, 32, True, 1, 0, -2147483648, 2147483647, "", MOBO),
+    ])
+
+    # --- Comments -----------------------------------------------------------
+    lines += [
+        f'CM_ BO_ {ext(MOBO_HEARTBEAT_ID)} "100 ms heartbeat. State (0=INIT,1=STANDBY,2=ACTIVE). MOBO never self-faults.";',
+        f'CM_ BO_ {ext(MOBO_ERRORS_ID)} "Full 32-bit error and warning bitmasks (pure telemetry).";',
+        f'CM_ BO_ {ext(MOBO_CAN_STATS_ID)} "CAN TX/RX counters (lower 16 bits).";',
+        f'CM_ BO_ {ext(MOBO_POWER_TELEMETRY_ID)} "Battery, 5V rail, brake-input voltage, and raw LV current ADC count.";',
+        f'CM_ BO_ {ext(MOBO_CURRENT_TELEMETRY_ID)} "LV and HC current with running peaks.";',
+        f'CM_ BO_ {ext(MOBO_SAFETY_STATUS_ID)} "Safety inputs: raw, debounced, and latched (telemetry only).";',
+        f'CM_ BO_ {ext(MOBO_RELAY_STATUS_ID)} "Commanded vs actual relay state with per-channel FSM.";',
+        f'CM_ BO_ {ext(MOBO_VCU_POWER_CMD_ID)} "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask. Only command source MOBO honors.";',
+        f'CM_ BO_ {ext(MOBO_RESET_CMD_ID)} "System reset; any frame on this ID triggers a reset and payload is ignored.";',
+        f'CM_ BO_ {ext(MOBO_CONFIG_CMD_ID)} "Runtime config write. Param_ID per CONFIG_PARAM_* in config_manager.h.";',
         "",
-        f"BO_ {fmt_extended_id(mobo_power_info_id)} MOBO_Power_Info: 8 Baby_MOBO",
-        ' SG_ Battery_Voltage : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool',
+        # Cycle times
+        'BA_DEF_ BO_  "GenMsgCycleTime" INT 0 65535;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_HEARTBEAT_ID)} 100;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_ERRORS_ID)} 500;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_CAN_STATS_ID)} 1000;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_POWER_TELEMETRY_ID)} 200;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_CURRENT_TELEMETRY_ID)} 100;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_SAFETY_STATUS_ID)} 100;',
+        f'BA_ "GenMsgCycleTime" BO_ {ext(MOBO_RELAY_STATUS_ID)} 100;',
         "",
-        f"BO_ {fmt_extended_id(mobo_lc_summary_id)} MOBO_LC_Summary: 8 Baby_MOBO",
-        ' SG_ FiveV_Sense : 0|16@1+ (0.001,0) [0|65.535] "V" Host_Tool',
-        ' SG_ Brake_Input : 16|16@1+ (0.001,0) [0|65.535] "V" Host_Tool',
-        ' SG_ LV_Current : 32|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool',
-        "",
-        f"BO_ {fmt_extended_id(mobo_hc_summary_id)} MOBO_HC_Summary: 8 Baby_MOBO",
-        ' SG_ HC_Current : 0|16@1- (0.001,0) [-32.768|32.767] "A" Host_Tool',
-        ' SG_ Pump_Cmd : 16|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ DRS_Cmd : 17|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ Fans_Cmd : 18|1@1+ (1,0) [0|1] "" Host_Tool',
-        ' SG_ Rad_Cmd : 19|1@1+ (1,0) [0|1] "" Host_Tool',
-        "",
-        f"BO_ {fmt_extended_id(reset_cmd_id)} CAN_Reset_Command: 8 Host_Tool",
-        ' SG_ Reset_Command_Raw : 0|64@1+ (1,0) [0|18446744073709551615] "" Baby_MOBO',
-        "",
-        "CM_ BO_ "
-        + fmt_extended_id(mobo_summary_id)
-        + ' "Periodic MOBO summary frame from CAN_MOBO_Summary(); only heartbeat toggle in byte 0 is currently active.";',
-        "CM_ BO_ "
-        + fmt_extended_id(mobo_power_info_id)
-        + ' "Battery sense reading from ADC1_IN5 with only bytes 0-1 used for battery voltage.";',
-        "CM_ BO_ "
-        + fmt_extended_id(mobo_lc_summary_id)
-        + ' "Low-current summary from ADC1_IN7, ADC1_IN6, and ADC1_IN8 with only FiveV, Brake, and LV current bytes active.";',
-        "CM_ BO_ "
-        + fmt_extended_id(mobo_hc_summary_id)
-        + ' "High-current summary from ADC1_IN11 with current in bytes 0-1 and output command bits in byte 2.";',
-        "CM_ BO_ "
-        + fmt_extended_id(reset_cmd_id)
-        + ' "Send this extended ID to trigger NVIC_SystemReset() in CAN_ProcessRXQueue().";',
-        "",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " Heartbeat_Toggle 0 \"Off\" 1 \"On\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " SDC_1 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " SDC_2 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " SDC_3 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " BMS 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " BSPD 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_summary_id)
-        + " IMD 0 \"Inactive\" 1 \"Active\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_hc_summary_id)
-        + " Pump_Cmd 0 \"Off\" 1 \"On\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_hc_summary_id)
-        + " DRS_Cmd 0 \"Off\" 1 \"On\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_hc_summary_id)
-        + " Fans_Cmd 0 \"Off\" 1 \"On\";",
-        'VAL_ '
-        + fmt_extended_id(mobo_hc_summary_id)
-        + " Rad_Cmd 0 \"Off\" 1 \"On\";",
-        "",
-        "BA_DEF_ BO_  \"GenMsgCycleTime\" INT 0 65535;",
-        "BA_ \"GenMsgCycleTime\" BO_ " + fmt_extended_id(mobo_summary_id) + " 1000;",
-        "BA_ \"GenMsgCycleTime\" BO_ " + fmt_extended_id(mobo_power_info_id) + " 1000;",
-        "BA_ \"GenMsgCycleTime\" BO_ " + fmt_extended_id(mobo_lc_summary_id) + " 1000;",
-        "BA_ \"GenMsgCycleTime\" BO_ " + fmt_extended_id(mobo_hc_summary_id) + " 1000;",
+        # Value tables for state and relay-FSM enums
+        f'VAL_ {ext(MOBO_HEARTBEAT_ID)} System_State 0 "INIT" 1 "STANDBY" 2 "ACTIVE";',
+        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Pump_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
+        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} DRS_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
+        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Fans_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
+        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Rad_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
         "",
     ]
 

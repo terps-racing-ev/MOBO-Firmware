@@ -75,7 +75,6 @@ endif
 ######################################
 # C sources
 C_SOURCES =  \
-Core/Src/can.c \
 Core/Src/freertos.c \
 Core/Src/main.c \
 Core/Src/stm32l4xx_hal_msp.c \
@@ -84,6 +83,16 @@ Core/Src/stm32l4xx_it.c \
 Core/Src/syscalls.c \
 Core/Src/sysmem.c \
 Core/Src/system_stm32l4xx.c \
+Core/Src/state_machine.c \
+Core/Src/error_manager.c \
+Core/Src/config_manager.c \
+Core/Src/can_manager.c \
+Core/Src/power_manager.c \
+Core/Src/sensor_manager.c \
+Core/Src/safety_monitor.c \
+Core/Src/coolant_pump.c \
+Core/Src/watchdog.c \
+Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_iwdg.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc.c \
 Drivers/STM32L4xx_HAL_Driver/Src/stm32l4xx_hal_adc_ex.c \
