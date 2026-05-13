@@ -1,1 +1,0 @@
-build/debug/Baby_MOBO_b_startup_stm32l432xx.o: startup_stm32l432xx.s

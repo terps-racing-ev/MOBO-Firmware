@@ -1,5 +1,0 @@
-# Local STM32 toolchain paths for this workspace.
-# Matches the working extension-managed toolchain used in the bootloader repo.
-
-ARM_GCC_PATH = c:\Users\kerry\AppData\Roaming\Code\User\globalStorage\bmd.stm32-for-vscode\@xpack-dev-tools\arm-none-eabi-gcc\14.2.1-1.1.1\.content\bin
-OPENOCD = c:\Users\kerry\AppData\Roaming\Code\User\globalStorage\bmd.stm32-for-vscode\@xpack-dev-tools\openocd\0.12.0-7.1\.content\bin\openocd.EXE
