@@ -1,1 +1,11 @@
-build/
+/build/
+.stm32env
+
+# Build artifacts
+*.o
+*.d
+*.lst
+*.elf
+*.map
+*.bin
+*.hex

@@ -2,18 +2,66 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Build App A+B",
-      "type": "shell",
-      "command": "C:\\Users\\kerry\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\windows-build-tools\\4.4.1-3.1\\.content\\bin\\make.exe",
-      "args": [
-        "-f",
-        "dual_build.mk"
-      ],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": []
+        "label": "Build App A+B",
+        "type": "shell",
+        "command": "make",
+        "args": [
+            "-f",
+            "dual_build.mk"
+        ],
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": []
+    },
+    {
+        "label": "Build STM",
+        "type": "process",
+        "command": "${command:stm32-for-vscode.build}",
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": [
+            "$gcc"
+        ]
+    },
+    {
+        "label": "Build Clean STM",
+        "type": "process",
+        "command": "${command:stm32-for-vscode.cleanBuild}",
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": [
+            "$gcc"
+        ]
+    },
+    {
+        "label": "Flash STM",
+        "type": "process",
+        "command": "${command:stm32-for-vscode.flash}",
+        "options": {
+            "cwd": "${workspaceFolder}"
+        },
+        "group": {
+            "kind": "build",
+            "isDefault": true
+        },
+        "problemMatcher": [
+            "$gcc"
+        ]
     }
-  ]
+]
 }
