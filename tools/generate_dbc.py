@@ -114,7 +114,7 @@ def build_dbc() -> str:
     lines += msg(MOBO_POWER_TELEMETRY_ID, "MOBO_Power_Telemetry", 8, MOBO, [
         sig("Battery_Voltage", 0,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
         sig("FiveV_Sense",    16,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
-        sig("Brake_Input",    32,  16, False, 0.001, 0, 0, 65.535, "V", HOST),
+            sig("BSE_PSI_Rear",  32,  16, False, 0.1,   0, 0, 10000,  "PSI", HOST),
         sig("LV_Current_Raw", 48,  16, False, 1,     0, 0, 4095,   "count", HOST),
     ])
 
@@ -186,7 +186,7 @@ def build_dbc() -> str:
         f'CM_ BO_ {ext(MOBO_HEARTBEAT_ID)} "100 ms heartbeat. State (0=INIT,1=STANDBY,2=ACTIVE). MOBO never self-faults.";',
         f'CM_ BO_ {ext(MOBO_ERRORS_ID)} "Full 32-bit error and warning bitmasks (pure telemetry).";',
         f'CM_ BO_ {ext(MOBO_CAN_STATS_ID)} "CAN TX/RX counters (lower 16 bits).";',
-        f'CM_ BO_ {ext(MOBO_POWER_TELEMETRY_ID)} "Battery, 5V rail, brake-input voltage, and raw LV current ADC count.";',
+        f'CM_ BO_ {ext(MOBO_POWER_TELEMETRY_ID)} "Battery voltage, 5V rail voltage, rear brake pressure (PSI), and raw LV current ADC count.";',
         f'CM_ BO_ {ext(MOBO_CURRENT_TELEMETRY_ID)} "LV and HC current with running peaks.";',
         f'CM_ BO_ {ext(MOBO_SAFETY_STATUS_ID)} "Safety inputs: raw, debounced, and latched (telemetry only).";',
         f'CM_ BO_ {ext(MOBO_RELAY_STATUS_ID)} "Commanded vs actual relay state with per-channel FSM.";',

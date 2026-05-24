@@ -131,12 +131,33 @@ static HAL_StatusTypeDef Sensor_ReadLcSummary(Sensor_Readings_t *local)
     }
 
     uint32_t five_v_mv = (five_v_raw * SENSOR_VREF_MV * 2U) / SENSOR_ADC_FULL;
+    /* Brake sensor: original 0.5..4.5 V signal goes through an on-board
+     * 10k/10k divider before reaching the ADC pin, so multiplying the pin
+     * voltage by 2 recovers the original sensor voltage in mV. */
     uint32_t brake_mv  = (brake_raw  * SENSOR_VREF_MV * 2U) / SENSOR_ADC_FULL;
+
+    /* Convert sensor voltage to brake pressure (PSI):
+     *   500 mV -> 0 PSI, 4500 mV -> 3000 PSI  =>  PSI = (mV - 500) * 3/4.
+     * Outside the +/-250 mV tolerance band (i.e. < 250 mV or > 4750 mV) the
+     * sensor is considered disconnected/faulted and we publish 0 PSI.
+     * Inside the tolerance band but outside the 500..4500 mV nominal range
+         * we clamp to 0 or 3000 PSI. A small deadband suppresses anything below
+         * 10 PSI to 0 PSI. */
+    uint16_t brake_psi = 0;
+    if (brake_mv >= 250U && brake_mv <= 4750U) {
+        uint32_t mv_clamped = brake_mv;
+        if (mv_clamped < 500U)  mv_clamped = 500U;
+        if (mv_clamped > 4500U) mv_clamped = 4500U;
+        brake_psi = (uint16_t)(((mv_clamped - 500U) * 3000U) / 4000U);
+            if (brake_psi < 10U) {
+                brake_psi = 0U;
+            }
+    }
 
     uint32_t lv_avg_raw = SampleAvg_Push(&g_lv_avg, lv_curr_raw);
 
     local->five_v_mv      = (uint16_t)((five_v_mv > 0xFFFFU) ? 0xFFFFU : five_v_mv);
-    local->brake_mv       = (uint16_t)((brake_mv  > 0xFFFFU) ? 0xFFFFU : brake_mv);
+    local->brake_psi      = brake_psi;
     local->lv_current_ma  = Sensor_RawToCurrentMa(lv_avg_raw);
     local->lv_current_raw = (uint16_t)lv_avg_raw;
     return HAL_OK;

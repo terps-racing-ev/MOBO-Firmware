@@ -30,7 +30,7 @@ extern "C" {
 typedef struct {
     uint16_t battery_mv;        /**< Battery rail in mV */
     uint16_t five_v_mv;         /**< 5 V rail in mV */
-    uint16_t brake_mv;          /**< Brake input in mV */
+    uint16_t brake_psi;         /**< Brake pressure in PSI (0..3000); 0 when sensor reading is out of valid range */
     int16_t  lv_current_ma;     /**< LV current in mA (signed, after cal/noise) */
     int16_t  hc_current_ma;     /**< HC current in mA */
     int16_t  lv_current_peak_ma;

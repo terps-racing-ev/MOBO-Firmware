@@ -379,8 +379,10 @@ static HAL_StatusTypeDef CAN_SendPowerTelemetry(void)
     d[1] = (uint8_t)((s.battery_mv >> 8) & 0xFFU);
     d[2] = (uint8_t)( s.five_v_mv        & 0xFFU);
     d[3] = (uint8_t)((s.five_v_mv  >> 8) & 0xFFU);
-    d[4] = (uint8_t)( s.brake_mv         & 0xFFU);
-    d[5] = (uint8_t)((s.brake_mv   >> 8) & 0xFFU);
+    /* Brake_Pressure DBC signal uses factor 0.1, so transmit PSI x 10. */
+    uint16_t brake_psi_raw = (uint16_t)((uint32_t)s.brake_psi * 10U);
+    d[4] = (uint8_t)( brake_psi_raw        & 0xFFU);
+    d[5] = (uint8_t)((brake_psi_raw  >> 8) & 0xFFU);
     d[6] = (uint8_t)( s.lv_current_raw        & 0xFFU);
     d[7] = (uint8_t)((s.lv_current_raw >> 8)  & 0xFFU);
     return CAN_SendMessage(MOBO_POWER_TELEMETRY_ID, d, 8, CAN_PRIORITY_NORMAL);
