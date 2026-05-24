@@ -9,3 +9,4 @@
 *.map
 *.bin
 *.hex
+.vscode/settings.json

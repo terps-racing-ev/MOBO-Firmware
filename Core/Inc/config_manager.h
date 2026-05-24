@@ -29,16 +29,23 @@ extern "C" {
  * and Bank B (0x08022000-0x0803BFFF). Free for config use. */
 #define CONFIG_FLASH_ADDR     0x0803F800U
 #define CONFIG_FLASH_PAGE     127U     /**< Page index for STM32L432KC (2 KB pages) */
-#define CONFIG_MAGIC          0xC0DEC0FFEE5AA500ULL  /**< Arbitrary 64-bit signature */
+/* Bump when default-value layout changes in a way that should force discard
+ * of any previously-persisted record (e.g. corrected divider ratio). */
+#define CONFIG_MAGIC          0xC0DEC0FFEE5AA503ULL  /**< Arbitrary 64-bit signature */
 
 /* Defaults applied when flash is blank or magic mismatch -------------------*/
 #define CONFIG_DEFAULT_LV_OFFSET_MA    200
 #define CONFIG_DEFAULT_HC_OFFSET_MA    200
 /* Battery sense uses a resistor divider; mV = (raw * 3300 * NUM) / (4095 * DEN).
- * Default divider keeps the legacy "raw * 330 * 92 / 4095" magic until the
- * actual divider ratio is verified on hardware. */
-#define CONFIG_DEFAULT_VDIV_NUM        92
-#define CONFIG_DEFAULT_VDIV_DEN        10
+ * Calibrated empirically against the firmware's published 2 s averaged raw:
+ * with Vbatt = 11.98 V the firmware (with NUM/DEN = 1711/250) reported
+ * 7.97 V, implying the actual scale factor needs to be 1711/250 * 11980/7970
+ * ~= 10.288. Using 1286/125 = 10.288 reproduces the measured battery
+ * voltage. (The DMM-measured pin voltage of 1.252 V also implies an
+ * ~9.57x divider, which is close; the small residual difference is absorbed
+ * here so the firmware's reported mV matches a calibrated DMM.) */
+#define CONFIG_DEFAULT_VDIV_NUM        1286
+#define CONFIG_DEFAULT_VDIV_DEN        125
 /* RPI authority lapses after this period of RPI silence */
 #define CONFIG_DEFAULT_RPI_TIMEOUT_MS  5000U
 

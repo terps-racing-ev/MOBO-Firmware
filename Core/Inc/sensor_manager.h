@@ -3,10 +3,11 @@
   * @file    sensor_manager.h
   * @brief   ADC1 owner: battery voltage, 5V rail, brake input, LV/HC currents
   *
-  * Sole owner of ADC1. Caches the last configured channel to avoid the
-  * per-read reconfiguration overhead the legacy code suffered from. Current
-  * channels (LV, HC) are 16-sample averaged with calibration offset and noise
-  * floor sourced from config_manager.
+  * Sole owner of ADC1. Current sensors (LV, HC) use ADC hardware oversampling
+  * (256x averaged on-chip, max sampling time per sub-sample) combined with a
+  * 2-second software rolling average to suppress noise. The zero-current
+  * point is derived from the assumed 1.65 V mid-rail bias of the ACS37012
+  * (no hard-coded raw constant, no per-board offset).
   ******************************************************************************
   */
 
@@ -21,9 +22,9 @@ extern "C" {
 #include "cmsis_os.h"
 #include <stdint.h>
 
-#define SENSOR_TASK_PERIOD_MS  50U
-#define SENSOR_CURRENT_AVG_N   16U
-#define SENSOR_CURRENT_NOISE_FLOOR_MA  200
+#define SENSOR_TASK_PERIOD_MS         50U
+#define SENSOR_CURRENT_AVG_WINDOW_MS  2000U
+#define SENSOR_CURRENT_AVG_DEPTH      (SENSOR_CURRENT_AVG_WINDOW_MS / SENSOR_TASK_PERIOD_MS)
 
 /** Latest sensor readings. All fields updated atomically each task tick. */
 typedef struct {

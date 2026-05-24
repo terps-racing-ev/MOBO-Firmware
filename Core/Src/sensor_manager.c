@@ -13,11 +13,15 @@
 
 extern ADC_HandleTypeDef hadc1;
 
-#define SENSOR_VREF_MV         3300U
-#define SENSOR_ADC_FULL        4095U
-#define LV_CURR_AVG_SAMPLES    16U
-#define LV_CURR_ZERO_RAW       2048U
-#define LV_CURR_OFFSET_MA      200
+#define SENSOR_VREF_MV            3300U
+#define SENSOR_ADC_FULL           4095U
+/* ACS37012 mid-rail bias (datasheet: VCC/2 nominal). We assume an ideal 3.3 V
+ * rail; the corresponding raw count is the zero-current reference. */
+#define SENSOR_CURRENT_ZERO_MV    (SENSOR_VREF_MV / 2U)
+#define SENSOR_CURRENT_ZERO_RAW   ((SENSOR_CURRENT_ZERO_MV * SENSOR_ADC_FULL) / SENSOR_VREF_MV)
+/* ACS37012LLZATR-030B3 sensitivity (datasheet): 44 mV / A. */
+#define ACS37012_MV_PER_A         44
+
 /* Channel definitions per main.h CubeMX */
 #define SENSOR_ADC_CH_BATT     ADC_CHANNEL_5
 #define SENSOR_ADC_CH_BRAKE    ADC_CHANNEL_6
@@ -25,10 +29,53 @@ extern ADC_HandleTypeDef hadc1;
 #define SENSOR_ADC_CH_LV       ADC_CHANNEL_10
 #define SENSOR_ADC_CH_HC       ADC_CHANNEL_11
 
+/* Rolling average over SENSOR_CURRENT_AVG_DEPTH task ticks (2 s @ 50 ms).
+ * Used for all analog channels that benefit from low-pass filtering on top
+ * of the ADC's hardware 256x oversampling (current sensors and battery). */
+typedef struct {
+    uint32_t buf[SENSOR_CURRENT_AVG_DEPTH];
+    uint64_t sum;
+    uint16_t idx;
+    uint16_t count;
+} SampleAvg_t;
+
 static Sensor_Readings_t g_readings = {0};
 static osMutexId_t       g_mutex    = NULL;
+static SampleAvg_t       g_lv_avg   = {0};
+static SampleAvg_t       g_hc_avg   = {0};
+static SampleAvg_t       g_batt_avg = {0};
 
 static const osMutexAttr_t g_mutex_attr = { .name = "SensorMutex" };
+
+static uint32_t SampleAvg_Push(SampleAvg_t *a, uint32_t raw)
+{
+    if (a->count < SENSOR_CURRENT_AVG_DEPTH) {
+        a->buf[a->idx] = raw;
+        a->sum += raw;
+        a->count++;
+    } else {
+        a->sum -= a->buf[a->idx];
+        a->buf[a->idx] = raw;
+        a->sum += raw;
+    }
+    a->idx++;
+    if (a->idx >= SENSOR_CURRENT_AVG_DEPTH) {
+        a->idx = 0;
+    }
+    return (uint32_t)(a->sum / a->count);
+}
+
+static int16_t Sensor_RawToCurrentMa(uint32_t avg_raw)
+{
+    int32_t delta = (int32_t)avg_raw - (int32_t)SENSOR_CURRENT_ZERO_RAW;
+    /* mA = delta_raw * VREF_mV * 1000 / (ADC_FULL * sensitivity_mV_per_A) */
+    int64_t num = (int64_t)delta * (int64_t)SENSOR_VREF_MV * 1000LL;
+    int64_t den = (int64_t)SENSOR_ADC_FULL * (int64_t)ACS37012_MV_PER_A;
+    int64_t mA  = num / den;
+    if (mA > INT16_MAX) mA = INT16_MAX;
+    if (mA < INT16_MIN) mA = INT16_MIN;
+    return (int16_t)mA;
+}
 
 static HAL_StatusTypeDef ADC_Read_Channel(uint32_t channel, uint32_t *adc_raw)
 {
@@ -67,109 +114,44 @@ static HAL_StatusTypeDef ADC_Read_Channel(uint32_t channel, uint32_t *adc_raw)
     return HAL_OK;
 }
 
-static HAL_StatusTypeDef Sensor_ReadLcSummaryLegacy(Sensor_Readings_t *local)
+static HAL_StatusTypeDef Sensor_ReadLcSummary(Sensor_Readings_t *local)
 {
     uint32_t five_v_raw = 0;
     uint32_t brake_raw = 0;
     uint32_t lv_curr_raw = 0;
-    uint32_t lv_curr_sum = 0;
-    int32_t lv_curr_delta_raw = 0;
 
-    uint32_t five_v_mv = 0;
-    uint32_t brake_mv = 0;
-    uint32_t lv_curr_mv = 0;
-    int32_t lv_curr_a_milli = 0;
-    uint32_t sample_index = 0;
-
-    if (ADC_Read_Channel(ADC_CHANNEL_7, &five_v_raw) != HAL_OK) {
+    if (ADC_Read_Channel(SENSOR_ADC_CH_5V, &five_v_raw) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    if (ADC_Read_Channel(SENSOR_ADC_CH_BRAKE, &brake_raw) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    if (ADC_Read_Channel(SENSOR_ADC_CH_LV, &lv_curr_raw) != HAL_OK) {
         return HAL_ERROR;
     }
 
-    if (ADC_Read_Channel(ADC_CHANNEL_6, &brake_raw) != HAL_OK) {
-        return HAL_ERROR;
-    }
+    uint32_t five_v_mv = (five_v_raw * SENSOR_VREF_MV * 2U) / SENSOR_ADC_FULL;
+    uint32_t brake_mv  = (brake_raw  * SENSOR_VREF_MV * 2U) / SENSOR_ADC_FULL;
 
-    for (sample_index = 0; sample_index < LV_CURR_AVG_SAMPLES; sample_index++) {
-        uint32_t sample_raw = 0;
+    uint32_t lv_avg_raw = SampleAvg_Push(&g_lv_avg, lv_curr_raw);
 
-        if (ADC_Read_Channel(SENSOR_ADC_CH_LV, &sample_raw) != HAL_OK) {
-            return HAL_ERROR;
-        }
-
-        lv_curr_sum += sample_raw;
-    }
-
-    lv_curr_raw = lv_curr_sum / LV_CURR_AVG_SAMPLES;
-
-    five_v_mv = (five_v_raw * 3300U * 2) / 4095U;
-    brake_mv = (brake_raw * 3300U * 2) / 4095U;
-    lv_curr_mv = (lv_curr_raw * 3300U) / 4095U;
-    (void)lv_curr_mv;
-    lv_curr_delta_raw = (int32_t)lv_curr_raw - (int32_t)LV_CURR_ZERO_RAW;
-
-    lv_curr_a_milli = (int32_t)((((int64_t)lv_curr_delta_raw * 3300LL * 1000LL) / 4095LL) / 44LL);
-
-    if (lv_curr_a_milli > 0) {
-        lv_curr_a_milli += LV_CURR_OFFSET_MA;
-    }
-
-    if (lv_curr_a_milli <= 200) {
-        lv_curr_a_milli = 0;
-    }
-
-    if (lv_curr_a_milli > INT16_MAX) {
-        lv_curr_a_milli = INT16_MAX;
-    }
-    if (lv_curr_a_milli < INT16_MIN) {
-        lv_curr_a_milli = INT16_MIN;
-    }
-
-    local->five_v_mv = (uint16_t)five_v_mv;
-    local->brake_mv = (uint16_t)brake_mv;
-    local->lv_current_ma = (int16_t)lv_curr_a_milli;
-    local->lv_current_raw = (uint16_t)lv_curr_raw;
+    local->five_v_mv      = (uint16_t)((five_v_mv > 0xFFFFU) ? 0xFFFFU : five_v_mv);
+    local->brake_mv       = (uint16_t)((brake_mv  > 0xFFFFU) ? 0xFFFFU : brake_mv);
+    local->lv_current_ma  = Sensor_RawToCurrentMa(lv_avg_raw);
+    local->lv_current_raw = (uint16_t)lv_avg_raw;
     return HAL_OK;
 }
 
-static HAL_StatusTypeDef Sensor_ReadHcSummaryLegacy(Sensor_Readings_t *local)
+static HAL_StatusTypeDef Sensor_ReadHcSummary(Sensor_Readings_t *local)
 {
     uint32_t hc_curr_raw = 0;
-    uint32_t hc_curr_sum = 0;
-    int32_t hc_curr_delta_raw = 0;
-    int32_t hc_curr_a_milli = 0;
-    uint32_t sample_index = 0;
 
-    for (sample_index = 0; sample_index < LV_CURR_AVG_SAMPLES; sample_index++) {
-        uint32_t sample_raw = 0;
-
-        if (ADC_Read_Channel(ADC_CHANNEL_11, &sample_raw) != HAL_OK) {
-            return HAL_ERROR;
-        }
-
-        hc_curr_sum = hc_curr_sum + sample_raw;
+    if (ADC_Read_Channel(SENSOR_ADC_CH_HC, &hc_curr_raw) != HAL_OK) {
+        return HAL_ERROR;
     }
 
-    hc_curr_raw = hc_curr_sum / LV_CURR_AVG_SAMPLES;
-    hc_curr_delta_raw = (int32_t)hc_curr_raw - (int32_t)LV_CURR_ZERO_RAW;
-
-    hc_curr_a_milli = (int32_t)((((int64_t)hc_curr_delta_raw * 3300LL * 1000LL) / 4095LL) / 44LL);
-
-    if (hc_curr_a_milli > 0) {
-        hc_curr_a_milli += LV_CURR_OFFSET_MA;
-    }
-
-    if (hc_curr_a_milli <= 200) {
-        hc_curr_a_milli = 0;
-    }
-
-    if (hc_curr_a_milli > INT16_MAX) {
-        hc_curr_a_milli = INT16_MAX;
-    }
-    if (hc_curr_a_milli < INT16_MIN) {
-        hc_curr_a_milli = INT16_MIN;
-    }
-
-    local->hc_current_ma = (int16_t)hc_curr_a_milli;
+    uint32_t hc_avg_raw = SampleAvg_Push(&g_hc_avg, hc_curr_raw);
+    local->hc_current_ma = Sensor_RawToCurrentMa(hc_avg_raw);
     return HAL_OK;
 }
 
@@ -178,7 +160,28 @@ HAL_StatusTypeDef Sensor_Init(void)
     g_mutex = osMutexNew(&g_mutex_attr);
     if (g_mutex == NULL) return HAL_ERROR;
     memset(&g_readings, 0, sizeof(g_readings));
-    /* HAL_ADCEx_Calibration_Start is invoked once in main.c after MX_ADC1_Init. */
+    memset(&g_lv_avg,   0, sizeof(g_lv_avg));
+    memset(&g_hc_avg,   0, sizeof(g_hc_avg));
+    memset(&g_batt_avg, 0, sizeof(g_batt_avg));
+
+    /* Enable ADC hardware oversampling: 256 samples averaged on-chip per
+     * HAL_ADC_Start, with right-shift 8 to keep the output in 12-bit range.
+     * Combined with the 640.5-cycle per-sub-sample acquisition time set in
+     * ADC_Read_Channel, this gives the deepest noise reduction the ADC
+     * peripheral supports before any software averaging is layered on top. */
+    hadc1.Init.OversamplingMode               = ENABLE;
+    hadc1.Init.Oversampling.Ratio             = ADC_OVERSAMPLING_RATIO_256;
+    hadc1.Init.Oversampling.RightBitShift     = ADC_RIGHTBITSHIFT_8;
+    hadc1.Init.Oversampling.TriggeredMode     = ADC_TRIGGEREDMODE_SINGLE_TRIGGER;
+    hadc1.Init.Oversampling.OversamplingStopReset = ADC_REGOVERSAMPLING_CONTINUED_MODE;
+    if (HAL_ADC_Init(&hadc1) != HAL_OK) {
+        return HAL_ERROR;
+    }
+    /* Re-calibrate after re-init; main.c's pre-RTOS calibration was for the
+     * non-oversampled configuration. */
+    if (HAL_ADCEx_Calibration_Start(&hadc1, ADC_SINGLE_ENDED) != HAL_OK) {
+        return HAL_ERROR;
+    }
     return HAL_OK;
 }
 
@@ -218,19 +221,22 @@ void SensorTask(void *argument)
         uint32_t vdiv_den = Config_GetVoltageDividerDen();
 
         if (ADC_Read_Channel(SENSOR_ADC_CH_BATT, &raw) == HAL_OK) {
-            uint32_t mv = (raw * SENSOR_VREF_MV * vdiv_num)
-                          / ((uint32_t)SENSOR_ADC_FULL * vdiv_den);
+            /* Push the (already 256x HW-oversampled) raw count through the
+             * 2 s rolling average, then apply the divider to get Vbatt. */
+            uint32_t batt_avg_raw = SampleAvg_Push(&g_batt_avg, raw);
+            uint64_t mv = ((uint64_t)batt_avg_raw * (uint64_t)SENSOR_VREF_MV * (uint64_t)vdiv_num)
+                          / ((uint64_t)SENSOR_ADC_FULL * (uint64_t)vdiv_den);
             if (mv > 0xFFFFU) mv = 0xFFFFU;
             local.battery_mv = (uint16_t)mv;
         } else {
             any_fail = true;
         }
 
-        if (Sensor_ReadLcSummaryLegacy(&local) != HAL_OK) {
+        if (Sensor_ReadLcSummary(&local) != HAL_OK) {
             any_fail = true;
         }
 
-        if (Sensor_ReadHcSummaryLegacy(&local) != HAL_OK) {
+        if (Sensor_ReadHcSummary(&local) != HAL_OK) {
             any_fail = true;
         }
 

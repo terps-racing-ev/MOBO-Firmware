@@ -1,4 +1,20 @@
 {
     "cortex-debug.armToolchainPath": "c:\\Users\\Ali\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\arm-none-eabi-gcc\\14.2.1-1.1.1\\.content\\bin",
-    "cortex-debug.openocdPath": "c:\\Users\\Ali\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\openocd\\0.12.0-6.1\\.content\\bin\\openocd.EXE"
+    "cortex-debug.openocdPath": "c:\\Users\\Ali\\AppData\\Roaming\\Code\\User\\globalStorage\\bmd.stm32-for-vscode\\@xpack-dev-tools\\openocd\\0.12.0-6.1\\.content\\bin\\openocd.EXE",
+    "workbench.colorCustomizations": {
+        "editor.lineHighlightBackground": "#192d4d",
+        "editor.lineHighlightBorder": "#9fced11f",
+        "terminalCursor.foreground": "#00ff15",
+        "activityBar.background": "#580F33",
+        "titleBar.activeBackground": "#7C1648",
+        "titleBar.activeForeground": "#FEFCFD",
+        "titleBar.inactiveBackground": "#580F33",
+        "titleBar.inactiveForeground": "#FEFCFD",
+        "statusBar.background": "#580F33",
+        "statusBar.foreground": "#FEFCFD",
+        "statusBar.debuggingBackground": "#580F33",
+        "statusBar.debuggingForeground": "#FEFCFD",
+        "statusBar.noFolderBackground": "#580F33",
+        "statusBar.noFolderForeground": "#FEFCFD"
+    }
 }
