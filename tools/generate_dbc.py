@@ -150,16 +150,17 @@ def build_dbc() -> str:
         bit("Pump_Commanded", 0, HOST),
         bit("DRS_Commanded",  1, HOST),
         bit("Fans_Commanded", 2, HOST),
-        bit("Rad_Commanded",  3, HOST),
+        bit("Radiator_Fans_Commanded",  3, HOST),
         bit("Pump_Actual",    8, HOST),
         bit("DRS_Actual",     9, HOST),
         bit("Fans_Actual",   10, HOST),
-        bit("Rad_Actual",    11, HOST),
+        bit("Radiator_Fans_Actual",    11, HOST),
         sig("Pump_State",     16, 4, False, 1, 0, 0, 4, "", HOST),
         sig("DRS_State",      20, 4, False, 1, 0, 0, 4, "", HOST),
         sig("Fans_State",     24, 4, False, 1, 0, 0, 4, "", HOST),
-        sig("Rad_State",      28, 4, False, 1, 0, 0, 4, "", HOST),
-        sig("Reserved_B4",    32, 8, False, 1, 0, 0, 255, "", HOST),
+        sig("Radiator_Fans_State",      28, 4, False, 1, 0, 0, 4, "", HOST),
+        bit("Acc_Fans_Active", 32, HOST),
+        bit("Acc_Fans_Phase",  33, HOST),
         sig("Ms_Since_Cmd",   40, 16, False, 1, 0, 0, 65535, "ms", HOST),
     ])
 
@@ -169,7 +170,8 @@ def build_dbc() -> str:
         bit("Pump_Request", 8, MOBO),
         bit("DRS_Request",  9, MOBO),
         bit("Fans_Request",10, MOBO),
-        bit("Rad_Request", 11, MOBO),
+        bit("Radiator_Fans_Request", 11, MOBO),
+        bit("Acc_Fans_Request",      12, MOBO),
     ])
 
     lines += msg(MOBO_RESET_CMD_ID, "MOBO_Reset_Command", 8, HOST, [
@@ -189,8 +191,8 @@ def build_dbc() -> str:
         f'CM_ BO_ {ext(MOBO_POWER_TELEMETRY_ID)} "Battery voltage, 5V rail voltage, rear brake pressure (PSI), and raw LV current ADC count.";',
         f'CM_ BO_ {ext(MOBO_CURRENT_TELEMETRY_ID)} "LV and HC current with running peaks.";',
         f'CM_ BO_ {ext(MOBO_SAFETY_STATUS_ID)} "Safety inputs: raw, debounced, and latched (telemetry only).";',
-        f'CM_ BO_ {ext(MOBO_RELAY_STATUS_ID)} "Commanded vs actual relay state with per-channel FSM.";',
-        f'CM_ BO_ {ext(MOBO_VCU_POWER_CMD_ID)} "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask. Only command source MOBO honors.";',
+        f'CM_ BO_ {ext(MOBO_RELAY_STATUS_ID)} "Commanded vs actual relay state with per-channel FSM. Byte 4 bit 0=Acc_Fans_Active, bit 1=Acc_Fans_Phase (0=DRS,1=Fans).";',
+        f'CM_ BO_ {ext(MOBO_VCU_POWER_CMD_ID)} "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask, bit 4 = Acc Fans mode (auto-alternates DRS/Fans every 30s, mutually exclusive). Only command source MOBO honors.";',
         f'CM_ BO_ {ext(MOBO_RESET_CMD_ID)} "System reset; any frame on this ID triggers a reset and payload is ignored.";',
         f'CM_ BO_ {ext(MOBO_CONFIG_CMD_ID)} "Runtime config write. Param_ID per CONFIG_PARAM_* in config_manager.h.";',
         "",
@@ -209,7 +211,7 @@ def build_dbc() -> str:
         f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Pump_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
         f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} DRS_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
         f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Fans_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
-        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Rad_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
+        f'VAL_ {ext(MOBO_RELAY_STATUS_ID)} Radiator_Fans_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";',
         "",
     ]
 

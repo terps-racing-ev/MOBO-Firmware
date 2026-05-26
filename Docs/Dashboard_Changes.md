@@ -38,7 +38,7 @@ Byte 4 has been repurposed from `Authority` to reserved (always `0`).
 | 0    | Commanded mask                       |
 | 1    | Actual mask                          |
 | 2    | Pump_State (low nibble), DRS_State (high nibble) |
-| 3    | Fans_State (low nibble), Rad_State (high nibble) |
+| 3    | Fans_State (low nibble), Radiator_Fans_State (high nibble) |
 | 4    | **Authority** (0=NONE,1=VCU,2=RPI,3=FORCE_SAFE,4=BOOT_RESTORE) |
 | 5–6  | Ms_Since_Cmd (uint16 LE)             |
 | 7    | Reserved                             |
@@ -50,7 +50,7 @@ Byte 4 has been repurposed from `Authority` to reserved (always `0`).
 | 0    | Commanded mask                       |
 | 1    | Actual mask                          |
 | 2    | Pump_State / DRS_State               |
-| 3    | Fans_State / Rad_State               |
+| 3    | Fans_State / Radiator_Fans_State     |
 | 4    | **Reserved (always 0)**              |
 | 5–6  | Ms_Since_Cmd (uint16 LE)             |
 | 7    | Reserved                             |
@@ -130,7 +130,7 @@ when MOBO reports an error. The dashboard should:
 - `MOBO_Config_Command` (`0x002001F8`) — same param ID space.
 - `VCU_MOBO_Command` (`0x002001F0`) payload layout (byte 0 bit 0 = enable,
   byte 1 bits 0..3 = relay mask).
-- Relay mask bit order: bit 0 Pump, bit 1 DRS, bit 2 Fans, bit 3 Radiator.
+- Relay mask bit order: bit 0 Pump, bit 1 DRS, bit 2 Fans, bit 3 Radiator Fans.
 - Persistent relay state on power cycle (still restored from flash after
   boot once safety is clean).
 - Auto-coolant-pump (firmware ORs the pump bit in when `INV_Coolant_Temp ≥

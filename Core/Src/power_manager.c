@@ -27,7 +27,7 @@ static const Relay_Pin_t g_relay_pins[POWER_CHANNEL_COUNT] = {
     [POWER_PUMP] = { PUMP_Ctrl_GPIO_Port, PUMP_Ctrl_Pin },
     [POWER_DRS]  = { DRS_Ctrl_GPIO_Port,  DRS_Ctrl_Pin  },
     [POWER_FANS] = { FANS_Ctrl_GPIO_Port, FANS_Ctrl_Pin },
-    [POWER_RAD]  = { RAD_Ctrl_GPIO_Port,  RAD_Ctrl_Pin  },
+    [POWER_RADIATOR_FANS] = { RAD_Ctrl_GPIO_Port,  RAD_Ctrl_Pin  },
 };
 
 static struct {
@@ -42,6 +42,16 @@ static struct {
     uint32_t       pending_persist_tick;
     uint8_t        pending_persist;
     uint8_t        boot_restore_done;
+
+    /* Acc Fans alternation state. While active, DRS and Fans are driven by
+     * acc_fans_phase rather than by the VCU mask bits, and they flip every
+     * ACC_FANS_TOGGLE_PERIOD_MS. The effective `acc_fans_active` is the OR
+     * of the VCU command request and the HVC temperature override. */
+    uint8_t        acc_fans_cmd_active;  /* from VCU_MOBO_Command bit 4 */
+    uint8_t        acc_fans_temp_override; /* latched from HVC Acc_Temp_Max_C */
+    uint8_t        acc_fans_active;
+    uint8_t        acc_fans_phase;       /* 0 = DRS, 1 = Fans */
+    uint32_t       acc_fans_last_toggle;
 } g_pm;
 
 static osMutexId_t g_mutex = NULL;
@@ -88,14 +98,47 @@ static void Power_RequestChannel(Power_Channel_t ch, bool desired_on, uint32_t n
     }
 }
 
+/* Caller must hold g_mutex. Re-evaluate the Acc Fans active flag from its
+ * input sources (VCU command request OR HVC temperature override). On a
+ * fresh OFF -> ON transition, reset the alternation phase to DRS so the
+ * first 30 s window is deterministic. */
+static void Power_UpdateAccFansActive(uint32_t now)
+{
+    uint8_t new_active = (g_pm.acc_fans_cmd_active || g_pm.acc_fans_temp_override)
+                         ? 1U : 0U;
+    if (new_active && !g_pm.acc_fans_active) {
+        g_pm.acc_fans_phase       = 0;
+        g_pm.acc_fans_last_toggle = now;
+    }
+    g_pm.acc_fans_active = new_active;
+}
+
 /* Caller must hold g_mutex. Drive GPIOs from g_pm.commanded_mask plus any
- * internal overrides (currently just the auto coolant pump). */
+ * internal overrides (auto coolant pump, Acc Fans alternation). DRS and Fans
+ * are unconditionally clamped to mutual exclusion at the end. */
 static void Power_RecomputeAndDriveGPIO(uint32_t now)
 {
     uint8_t effective = g_pm.commanded_mask;
     if (CoolantPump_GetDesiredPump()) {
         effective |= POWER_MASK_PUMP;
     }
+
+    /* Acc Fans alternation: replace the VCU-supplied DRS/Fans bits with the
+     * current alternation phase so exactly one of them is driven. */
+    if (g_pm.acc_fans_active) {
+        effective &= (uint8_t)~(POWER_MASK_DRS | POWER_MASK_FANS);
+        effective |= (g_pm.acc_fans_phase == 0U) ? POWER_MASK_DRS
+                                                  : POWER_MASK_FANS;
+    }
+
+    /* Hard mutual-exclusion backstop: DRS and Fans must NEVER be on at the
+     * same time, regardless of source. If both are set, drop Fans and raise
+     * a relay fault so the conflict is visible on the bus. */
+    if ((effective & POWER_MASK_DRS) && (effective & POWER_MASK_FANS)) {
+        effective &= (uint8_t)~POWER_MASK_FANS;
+        ErrorMgr_SetError(ERROR_RELAY_FAULT);
+    }
+
     for (uint8_t i = 0; i < POWER_CHANNEL_COUNT; i++) {
         bool desired = (effective & (1U << i)) != 0U;
         Power_RequestChannel((Power_Channel_t)i, desired, now);
@@ -188,6 +231,19 @@ bool PowerMgr_ApplyMask(uint8_t mask)
     return true;
 }
 
+void PowerMgr_SetAccFansMode(bool enabled)
+{
+    if (osMutexAcquire(g_mutex, osWaitForever) != osOK) {
+        return;
+    }
+    uint32_t now = osKernelGetTickCount();
+    g_pm.acc_fans_cmd_active = enabled ? 1U : 0U;
+    Power_UpdateAccFansActive(now);
+    g_pm.last_command_tick = now;
+    Power_RecomputeAndDriveGPIO(now);
+    osMutexRelease(g_mutex);
+}
+
 void PowerMgr_GetSnapshot(Power_Snapshot_t *out)
 {
     if (out == NULL) return;
@@ -197,6 +253,8 @@ void PowerMgr_GetSnapshot(Power_Snapshot_t *out)
         memcpy(out->state, g_pm.state, sizeof(out->state));
         uint32_t now = osKernelGetTickCount();
         out->ms_since_last_command = now - g_pm.last_command_tick;
+        out->acc_fans_active   = g_pm.acc_fans_active;
+        out->acc_fans_phase    = g_pm.acc_fans_phase;
         osMutexRelease(g_mutex);
     } else {
         memset(out, 0, sizeof(*out));
@@ -217,8 +275,46 @@ void PowerMgr_HandleVcuCommand(const CAN_Message_t *msg)
     if (msg->length < 2U) return;
     uint8_t enable = msg->data[0] & POWER_VCU_ENABLE_BIT;
     uint8_t mask   = msg->data[1] & POWER_MASK_ALL;
-    if (!enable) mask = 0;
+    /* Acc Fans request: byte 1 bit 4. */
+    bool    acc_fans = ((msg->data[1] >> 4) & 0x01U) != 0U;
+    if (!enable) {
+        mask     = 0;
+        acc_fans = false;
+    }
+    PowerMgr_SetAccFansMode(acc_fans);
     (void)PowerMgr_ApplyMask(mask);
+}
+
+/* ------------------------------------------------------------------------ */
+/* HVC ACC_Summary (extended 29-bit, ID 0x004001F5)                          */
+/* ------------------------------------------------------------------------ */
+
+bool PowerMgr_MatchHvcAccSummary(const CAN_Message_t *msg)
+{
+    return (msg != NULL) && (msg->id == HVC_ACC_SUMMARY_ID);
+}
+
+void PowerMgr_HandleHvcAccSummary(const CAN_Message_t *msg)
+{
+    if (msg == NULL || msg->length < 8U) return;
+    /* Acc_Temp_Max_C : 48|16@1- (0.1 degC/LSB), bytes 6..7 little-endian. */
+    int16_t temp_dC = (int16_t)((uint16_t)msg->data[6] |
+                                ((uint16_t)msg->data[7] << 8));
+
+    const int16_t on_dC  = (int16_t)(ACC_FANS_TEMP_ON_C  * 10);
+    const int16_t off_dC = (int16_t)(ACC_FANS_TEMP_OFF_C * 10);
+
+    if (osMutexAcquire(g_mutex, osWaitForever) != osOK) return;
+    if (temp_dC >= on_dC) {
+        g_pm.acc_fans_temp_override = 1;
+    } else if (temp_dC <= off_dC) {
+        g_pm.acc_fans_temp_override = 0;
+    }
+    /* Between on_dC and off_dC: hold previous override state. */
+    uint32_t now = osKernelGetTickCount();
+    Power_UpdateAccFansActive(now);
+    Power_RecomputeAndDriveGPIO(now);
+    osMutexRelease(g_mutex);
 }
 
 /* ------------------------------------------------------------------------ */
@@ -258,6 +354,14 @@ void PowerMgrTask(void *argument)
             }
 
             Power_TickFSM(now);
+
+            /* Acc Fans toggle: flip the alternation phase on schedule. */
+            if (g_pm.acc_fans_active &&
+                (now - g_pm.acc_fans_last_toggle) >= ACC_FANS_TOGGLE_PERIOD_MS) {
+                g_pm.acc_fans_phase      ^= 1U;
+                g_pm.acc_fans_last_toggle = now;
+            }
+
             Power_RecomputeAndDriveGPIO(now);
 
             osMutexRelease(g_mutex);

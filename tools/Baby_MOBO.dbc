@@ -87,16 +87,17 @@ BO_ 2149580864 MOBO_Relay_Status: 8 Baby_MOBO
  SG_ Pump_Commanded : 0|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ DRS_Commanded : 1|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ Fans_Commanded : 2|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ Rad_Commanded : 3|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Radiator_Fans_Commanded : 3|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ Pump_Actual : 8|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ DRS_Actual : 9|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ Fans_Actual : 10|1@1+ (1,0) [0|1] "" Host_Tool
- SG_ Rad_Actual : 11|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Radiator_Fans_Actual : 11|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ Pump_State : 16|4@1+ (1,0) [0|4] "" Host_Tool
  SG_ DRS_State : 20|4@1+ (1,0) [0|4] "" Host_Tool
  SG_ Fans_State : 24|4@1+ (1,0) [0|4] "" Host_Tool
- SG_ Rad_State : 28|4@1+ (1,0) [0|4] "" Host_Tool
- SG_ Reserved_B4 : 32|8@1+ (1,0) [0|255] "" Host_Tool
+ SG_ Radiator_Fans_State : 28|4@1+ (1,0) [0|4] "" Host_Tool
+ SG_ Acc_Fans_Active : 32|1@1+ (1,0) [0|1] "" Host_Tool
+ SG_ Acc_Fans_Phase : 33|1@1+ (1,0) [0|1] "" Host_Tool
  SG_ Ms_Since_Cmd : 40|16@1+ (1,0) [0|65535] "ms" Host_Tool
 
 BO_ 2149581296 VCU_MOBO_Command: 8 VCU
@@ -104,7 +105,8 @@ BO_ 2149581296 VCU_MOBO_Command: 8 VCU
  SG_ Pump_Request : 8|1@1+ (1,0) [0|1] "" Baby_MOBO
  SG_ DRS_Request : 9|1@1+ (1,0) [0|1] "" Baby_MOBO
  SG_ Fans_Request : 10|1@1+ (1,0) [0|1] "" Baby_MOBO
- SG_ Rad_Request : 11|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ Radiator_Fans_Request : 11|1@1+ (1,0) [0|1] "" Baby_MOBO
+ SG_ Acc_Fans_Request : 12|1@1+ (1,0) [0|1] "" Baby_MOBO
 
 BO_ 2149581303 MOBO_Reset_Command: 8 Host_Tool
  SG_ Ignored : 0|8@1+ (1,0) [0|255] "" Baby_MOBO
@@ -119,8 +121,8 @@ CM_ BO_ 2149580802 "CAN TX/RX counters (lower 16 bits).";
 CM_ BO_ 2149580816 "Battery voltage, 5V rail voltage, rear brake pressure (PSI), and raw LV current ADC count.";
 CM_ BO_ 2149580832 "LV and HC current with running peaks.";
 CM_ BO_ 2149580848 "Safety inputs: raw, debounced, and latched (telemetry only).";
-CM_ BO_ 2149580864 "Commanded vs actual relay state with per-channel FSM.";
-CM_ BO_ 2149581296 "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask. Only command source MOBO honors.";
+CM_ BO_ 2149580864 "Commanded vs actual relay state with per-channel FSM. Byte 4 bit 0=Acc_Fans_Active, bit 1=Acc_Fans_Phase (0=DRS,1=Fans).";
+CM_ BO_ 2149581296 "VCU relay command. Byte 0 bit 0 = enable; byte 1 bits 0..3 = relay mask, bit 4 = Acc Fans mode (auto-alternates DRS/Fans every 30s, mutually exclusive). Only command source MOBO honors.";
 CM_ BO_ 2149581303 "System reset; any frame on this ID triggers a reset and payload is ignored.";
 CM_ BO_ 2149581304 "Runtime config write. Param_ID per CONFIG_PARAM_* in config_manager.h.";
 
@@ -137,4 +139,4 @@ VAL_ 2149580800 System_State 0 "INIT" 1 "STANDBY" 2 "ACTIVE";
 VAL_ 2149580864 Pump_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
 VAL_ 2149580864 DRS_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
 VAL_ 2149580864 Fans_State 0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
-VAL_ 2149580864 Rad_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";
+VAL_ 2149580864 Radiator_Fans_State  0 "OFF" 1 "TURNING_ON" 2 "ON" 3 "TURNING_OFF" 4 "FAULT";

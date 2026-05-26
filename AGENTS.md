@@ -147,7 +147,7 @@ All MOBO IDs are 29-bit extended under the `0x00200xxx` prefix. Definitions live
 | 0   | Pump     |
 | 1   | DRS      |
 | 2   | Fans     |
-| 3   | Radiator |
+| 3   | Radiator Fans |
 
 ### State machine values (`System_State` field)
 

@@ -43,6 +43,10 @@ extern "C" {
 /* VCU_Summary (extended 29-bit). Carries VCU_RTD_Active at bit 32 (byte 4
  * bit 0). */
 #define VCU_SUMMARY_ID             0x0D1001F0U  /* extended 29-bit */
+/* HVC ACC_Summary (extended 29-bit). Carries Acc_Temp_Max_C at bits 48..63,
+ * signed little-endian, scale 0.1 degC. Used to OR a temperature-based
+ * override into the Acc Fans alternation. */
+#define HVC_ACC_SUMMARY_ID         0x004001F5U  /* extended 29-bit */
 
 #ifdef __cplusplus
 }

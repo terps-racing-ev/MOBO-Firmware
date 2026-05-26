@@ -57,6 +57,7 @@ static const CAN_DispatchEntry_t g_dispatch[] = {
     { CAN_MatchConfigCommand,             CAN_HandleConfigCommand,             "Config"   },
     { CoolantPump_MatchInverterTemps,     CoolantPump_HandleInverterTemps,     "InvTemp"  },
     { CoolantPump_MatchVcuSummary,        CoolantPump_HandleVcuSummary,        "VcuSumm"  },
+    { PowerMgr_MatchHvcAccSummary,        PowerMgr_HandleHvcAccSummary,        "HvcAcc"   },
 };
 #define CAN_DISPATCH_COUNT (sizeof(g_dispatch) / sizeof(g_dispatch[0]))
 
@@ -121,7 +122,8 @@ static void CAN_PackStdFilter(uint32_t id, uint32_t mask, CAN_FilterTypeDef *f)
 /* Filter banks:
  *   0 : MOBO base prefix (extended, mask)
  *   1 : VCU_Summary      (extended, exact)
- *   2 : INV_Temperatures_3 (standard, exact) */
+ *   2 : INV_Temperatures_3 (standard, exact)
+ *   3 : HVC ACC_Summary  (extended, exact) */
 static void CAN_ConfigureFilter(void)
 {
     CAN_FilterTypeDef f = {0};
@@ -142,6 +144,10 @@ static void CAN_ConfigureFilter(void)
 
     f.FilterBank = 2;
     CAN_PackStdFilter(INV_TEMPERATURES_3_ID, 0x7FFU, &f);
+    HAL_CAN_ConfigFilter(&hcan1, &f);
+
+    f.FilterBank = 3;
+    CAN_PackExtFilter(HVC_ACC_SUMMARY_ID, 0x1FFFFFFFU, &f);
     HAL_CAN_ConfigFilter(&hcan1, &f);
 }
 
@@ -427,8 +433,12 @@ static HAL_StatusTypeDef CAN_SendRelayStatus(void)
     d[1] = p.actual_mask;
     /* Pack 4 channel states (4 bits each) into bytes 2 & 3 */
     d[2] = (uint8_t)((p.state[POWER_PUMP] & 0x0FU) | ((p.state[POWER_DRS]  & 0x0FU) << 4));
-    d[3] = (uint8_t)((p.state[POWER_FANS] & 0x0FU) | ((p.state[POWER_RAD]  & 0x0FU) << 4));
-    d[4] = 0U; /* reserved (was authority) */
+    d[3] = (uint8_t)((p.state[POWER_FANS] & 0x0FU) | ((p.state[POWER_RADIATOR_FANS]  & 0x0FU) << 4));
+    /* Byte 4: Acc Fans status.
+     *   bit 0 = Acc_Fans_Active
+     *   bit 1 = Acc_Fans_Phase (0 = DRS driven, 1 = Fans driven) */
+    d[4] = (uint8_t)((p.acc_fans_active ? 0x01U : 0x00U) |
+                     (p.acc_fans_phase  ? 0x02U : 0x00U));
     /* Cap ms-since-last-command at 65535 for transport */
     uint16_t age = (p.ms_since_last_command > 0xFFFFU) ? 0xFFFFU
                                                        : (uint16_t)p.ms_since_last_command;
