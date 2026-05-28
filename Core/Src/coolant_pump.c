@@ -36,12 +36,6 @@ bool CoolantPump_GetDesiredPump(void)
 {
     bool desired = false;
     if (g_mutex == NULL) return false;
-    /* Startup lockout: hold the pump OFF for the first N ms after boot to
-     * avoid stacking pump inrush on top of the rest of the system powering
-     * up. Applies regardless of coolant temperature or RTD status. */
-    if (osKernelGetTickCount() < (uint32_t)COOLANT_PUMP_STARTUP_LOCKOUT_MS) {
-        return false;
-    }
     if (osMutexAcquire(g_mutex, osWaitForever) == osOK) {
         desired = g_cp.temp_override || g_cp.rtd_active;
         osMutexRelease(g_mutex);

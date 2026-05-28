@@ -23,20 +23,11 @@
 extern "C" {
 #endif
 
+#include "power_manager.h"
 #include "main.h"
 #include "can_manager.h"
 #include <stdint.h>
 #include <stdbool.h>
-
-/* Hard-coded thresholds (degrees C) ----------------------------------------*/
-#define COOLANT_PUMP_TEMP_ON_C       30
-#define COOLANT_PUMP_TEMP_HYST_C     2
-
-/* Startup lockout: the pump is held OFF for at least this many milliseconds
- * after boot, regardless of coolant temperature or VCU RTD status. Prevents
- * the pump inrush current from coinciding with the rest of the system
- * powering up. */
-#define COOLANT_PUMP_STARTUP_LOCKOUT_MS  10000U
 
 /** Initialize internal state and mutex. Must be called before tasks run. */
 HAL_StatusTypeDef CoolantPump_Init(void);

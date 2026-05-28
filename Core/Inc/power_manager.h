@@ -24,11 +24,13 @@
    *
    * Radiator Fans auto control
    * --------------------------
-   * The Radiator Fans output is controlled automatically from inverter coolant
-   * temperature and inverter motor speed. It latches ON when coolant reaches
-   * RADIATOR_FANS_TEMP_ON_C, releases when coolant falls to
-   * RADIATOR_FANS_TEMP_OFF_C, and is forced OFF whenever motor speed exceeds
-   * RADIATOR_FANS_MAX_MOTOR_SPEED_RPM.
+  * The Pump and Radiator Fans outputs are logic-controlled by default. A
+  * received MOBO power command can manually force either channel ON or OFF
+  * for up to POWER_TEMP_MANUAL_OVERRIDE_MS, after which automatic control
+  * resumes. Radiator Fans otherwise follow inverter coolant temperature and
+  * inverter motor speed, latching ON at RADIATOR_FANS_TEMP_ON_C, releasing
+  * at RADIATOR_FANS_TEMP_OFF_C, and forcing OFF whenever motor speed exceeds
+  * RADIATOR_FANS_MAX_MOTOR_SPEED_RPM.
   *
   * Mutual exclusion between DRS and Fans is enforced unconditionally: the
   * effective mask is post-clamped so DRS and Fans can NEVER be on together,
@@ -77,6 +79,19 @@ typedef enum {
 #define ACC_FANS_TEMP_ON_C         45
 #define ACC_FANS_TEMP_OFF_C        40
 
+/* Pump auto-control thresholds (sourced from inverter coolant temperature via
+ * INV_Temperatures_3 / INV_Coolant_Temp). The pump temperature override
+ * latches ON at COOLANT_PUMP_TEMP_ON_C and releases when temperature drops by
+ * COOLANT_PUMP_TEMP_HYST_C. */
+#define COOLANT_PUMP_TEMP_ON_C            37
+#define COOLANT_PUMP_TEMP_HYST_C          2
+
+/* Startup lockout: all high-current loads are held OFF for at least this many
+ * milliseconds after boot. This includes the pump, both Acc Fans outputs, and
+ * the radiator fans, preventing their inrush current from coinciding with the
+ * rest of the system powering up. */
+#define POWER_HIGH_CURRENT_STARTUP_LOCKOUT_MS   10000U
+
 /* Radiator Fans auto-control thresholds (sourced from inverter coolant temp
  * and INV_Motor_Speed). The thermal request latches ON at
  * RADIATOR_FANS_TEMP_ON_C and releases at RADIATOR_FANS_TEMP_OFF_C.
@@ -85,6 +100,11 @@ typedef enum {
 #define RADIATOR_FANS_TEMP_ON_C            42
 #define RADIATOR_FANS_TEMP_OFF_C           40
 #define RADIATOR_FANS_MAX_MOTOR_SPEED_RPM  2380
+
+/* A received MOBO power command manually overrides the automatic pump and
+ * radiator-fan logic for up to this long. Once the window expires, both
+ * channels return to automatic control. */
+#define POWER_TEMP_MANUAL_OVERRIDE_MS      60000U
 
 /* Per-channel FSM ----------------------------------------------------------*/
 typedef enum {

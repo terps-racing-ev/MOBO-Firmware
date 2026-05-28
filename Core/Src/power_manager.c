@@ -43,6 +43,10 @@ static struct {
     uint8_t        pending_persist;
     uint8_t        boot_restore_done;
 
+    uint8_t        temp_manual_override_mask;
+    uint32_t       temp_manual_override_tick;
+    uint8_t        temp_manual_override_active;
+
     /* Acc Fans alternation state. While active, DRS and Fans are driven by
      * acc_fans_phase rather than by the VCU mask bits, and they flip every
      * ACC_FANS_TOGGLE_PERIOD_MS. The effective `acc_fans_active` is the OR
@@ -60,6 +64,12 @@ static struct {
 
 static osMutexId_t g_mutex = NULL;
 static const osMutexAttr_t g_mutex_attr = { .name = "PowerMutex" };
+
+#define POWER_STARTUP_LOCKOUT_MASK \
+    (POWER_MASK_PUMP | POWER_MASK_DRS | POWER_MASK_FANS | POWER_MASK_RADIATOR_FANS)
+
+#define POWER_TEMP_MANUAL_OVERRIDE_MASK \
+    (POWER_MASK_PUMP | POWER_MASK_RADIATOR_FANS)
 
 /* ------------------------------------------------------------------------ */
 /* Helpers                                                                   */
@@ -138,6 +148,32 @@ static void Power_UpdateRadiatorFansRequest(void)
     }
 }
 
+/* Caller must hold g_mutex. Return true while the manual override window is
+ * still active; once it expires, automatic control resumes. */
+static bool Power_TempManualOverrideActive(uint32_t now)
+{
+    if (g_pm.temp_manual_override_active != 0U &&
+        (now - g_pm.temp_manual_override_tick) >= POWER_TEMP_MANUAL_OVERRIDE_MS) {
+        g_pm.temp_manual_override_active = 0U;
+    }
+
+    return g_pm.temp_manual_override_active != 0U;
+}
+
+static bool Power_StartupLockoutActive(uint32_t now)
+{
+    return now < (uint32_t)POWER_HIGH_CURRENT_STARTUP_LOCKOUT_MS;
+}
+
+/* Caller must hold g_mutex. Refresh the timed manual override window for the
+ * temp-controlled outputs from the latest received command bits. */
+static void Power_RefreshTempManualOverride(uint8_t mask, uint32_t now)
+{
+    g_pm.temp_manual_override_mask = mask & POWER_TEMP_MANUAL_OVERRIDE_MASK;
+    g_pm.temp_manual_override_tick = now;
+    g_pm.temp_manual_override_active = 1U;
+}
+
 /* Caller must hold g_mutex. Drive GPIOs from g_pm.commanded_mask plus any
  * internal overrides (auto coolant pump, Acc Fans alternation, automatic
  * radiator-fan control). DRS and Fans are unconditionally clamped to mutual
@@ -146,21 +182,33 @@ static void Power_RecomputeAndDriveGPIO(uint32_t now)
 {
     uint8_t effective = g_pm.commanded_mask;
     bool radiator_fans_speed_allowed;
+    bool temp_manual_override_active;
+    bool startup_lockout_active;
 
     Power_UpdateRadiatorFansRequest();
 
-    if (CoolantPump_GetDesiredPump()) {
-        effective |= POWER_MASK_PUMP;
-    }
+    temp_manual_override_active = Power_TempManualOverrideActive(now);
+    startup_lockout_active = Power_StartupLockoutActive(now);
 
-    radiator_fans_speed_allowed = g_pm.inverter_motor_speed_valid &&
-                                  (g_pm.inverter_motor_speed_rpm <= RADIATOR_FANS_MAX_MOTOR_SPEED_RPM);
+    /* Pump and Radiator Fans are logic-controlled by default. Their command
+     * bits are only honored during the timed manual override window. */
+    effective &= (uint8_t)~POWER_TEMP_MANUAL_OVERRIDE_MASK;
 
-    /* Radiator Fans are fully auto-controlled: apply the thermal latch when
-     * speed is within range, otherwise force the output off. */
-    effective &= (uint8_t)~POWER_MASK_RADIATOR_FANS;
-    if (g_pm.radiator_fans_temp_request && radiator_fans_speed_allowed) {
-        effective |= POWER_MASK_RADIATOR_FANS;
+    if (temp_manual_override_active) {
+        effective |= g_pm.temp_manual_override_mask;
+    } else {
+        if (CoolantPump_GetDesiredPump()) {
+            effective |= POWER_MASK_PUMP;
+        }
+
+        radiator_fans_speed_allowed = g_pm.inverter_motor_speed_valid &&
+                                      (g_pm.inverter_motor_speed_rpm <= RADIATOR_FANS_MAX_MOTOR_SPEED_RPM);
+
+        /* Radiator Fans are fully auto-controlled: apply the thermal latch when
+         * speed is within range, otherwise force the output off. */
+        if (g_pm.radiator_fans_temp_request && radiator_fans_speed_allowed) {
+            effective |= POWER_MASK_RADIATOR_FANS;
+        }
     }
 
     /* Acc Fans alternation: replace the VCU-supplied DRS/Fans bits with the
@@ -177,6 +225,10 @@ static void Power_RecomputeAndDriveGPIO(uint32_t now)
     if ((effective & POWER_MASK_DRS) && (effective & POWER_MASK_FANS)) {
         effective &= (uint8_t)~POWER_MASK_FANS;
         ErrorMgr_SetError(ERROR_RELAY_FAULT);
+    }
+
+    if (startup_lockout_active) {
+        effective &= (uint8_t)~POWER_STARTUP_LOCKOUT_MASK;
     }
 
     for (uint8_t i = 0; i < POWER_CHANNEL_COUNT; i++) {
@@ -312,6 +364,8 @@ bool PowerMgr_MatchVcuCommand(const CAN_Message_t *msg)
 
 void PowerMgr_HandleVcuCommand(const CAN_Message_t *msg)
 {
+    uint32_t now;
+
     if (msg->length < 2U) return;
     uint8_t enable = msg->data[0] & POWER_VCU_ENABLE_BIT;
     uint8_t mask   = msg->data[1] & POWER_MASK_ALL;
@@ -321,8 +375,20 @@ void PowerMgr_HandleVcuCommand(const CAN_Message_t *msg)
         mask     = 0;
         acc_fans = false;
     }
-    PowerMgr_SetAccFansMode(acc_fans);
-    (void)PowerMgr_ApplyMask(mask);
+
+    if (osMutexAcquire(g_mutex, osWaitForever) != osOK) return;
+
+    now = osKernelGetTickCount();
+    g_pm.acc_fans_cmd_active = acc_fans ? 1U : 0U;
+    Power_UpdateAccFansActive(now);
+    Power_RefreshTempManualOverride(mask, now);
+    Power_ApplyMaskInternal(mask, now);
+
+    g_pm.pending_persist      = 1;
+    g_pm.pending_persist_mask = mask;
+    g_pm.pending_persist_tick = now;
+
+    osMutexRelease(g_mutex);
 }
 
 /* ------------------------------------------------------------------------ */
