@@ -56,6 +56,7 @@ static const CAN_DispatchEntry_t g_dispatch[] = {
     { CAN_MatchResetCommand,              CAN_HandleResetCommand,              "Reset"    },
     { CAN_MatchConfigCommand,             CAN_HandleConfigCommand,             "Config"   },
     { CoolantPump_MatchInverterTemps,     CoolantPump_HandleInverterTemps,     "InvTemp"  },
+    { PowerMgr_MatchInverterMotorPosition, PowerMgr_HandleInverterMotorPosition, "InvPos"   },
     { CoolantPump_MatchVcuSummary,        CoolantPump_HandleVcuSummary,        "VcuSumm"  },
     { PowerMgr_MatchHvcAccSummary,        PowerMgr_HandleHvcAccSummary,        "HvcAcc"   },
 };
@@ -123,7 +124,8 @@ static void CAN_PackStdFilter(uint32_t id, uint32_t mask, CAN_FilterTypeDef *f)
  *   0 : MOBO base prefix (extended, mask)
  *   1 : VCU_Summary      (extended, exact)
  *   2 : INV_Temperatures_3 (standard, exact)
- *   3 : HVC ACC_Summary  (extended, exact) */
+ *   3 : HVC ACC_Summary  (extended, exact)
+ *   4 : INV Motor_Position_Info (standard, exact) */
 static void CAN_ConfigureFilter(void)
 {
     CAN_FilterTypeDef f = {0};
@@ -148,6 +150,10 @@ static void CAN_ConfigureFilter(void)
 
     f.FilterBank = 3;
     CAN_PackExtFilter(HVC_ACC_SUMMARY_ID, 0x1FFFFFFFU, &f);
+    HAL_CAN_ConfigFilter(&hcan1, &f);
+
+    f.FilterBank = 4;
+    CAN_PackStdFilter(INV_MOTOR_POSITION_INFO_ID, 0x7FFU, &f);
     HAL_CAN_ConfigFilter(&hcan1, &f);
 }
 

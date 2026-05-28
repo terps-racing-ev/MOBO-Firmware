@@ -79,6 +79,23 @@
         },
         "group": "build",
         "problemMatcher": []
+    },
+    {
+        "label": "Build + Push BINs (TREVPI)",
+        "type": "shell",
+        "command": "make -f dual_build.mk; scp build/debug/Baby_MOBO_a.bin build/debug/Baby_MOBO_b.bin trevor@trevpi.local:/home/trevor/firmware/MOBO/",
+        "options": {
+            "cwd": "${workspaceFolder}",
+            "shell": {
+                "executable": "pwsh",
+                "args": [
+                    "-NoProfile",
+                    "-Command"
+                ]
+            }
+        },
+        "group": "build",
+        "problemMatcher": []
     }
 ]
 }

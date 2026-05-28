@@ -5,15 +5,6 @@
         "editor.lineHighlightBackground": "#192d4d",
         "editor.lineHighlightBorder": "#9fced11f",
         "terminalCursor.foreground": "#00ff15",
-        "activityBar.background": "#580F33",
-        "titleBar.activeBackground": "#7C1648",
-        "titleBar.activeForeground": "#FEFCFD",
-        "titleBar.inactiveBackground": "#580F33",
-        "titleBar.inactiveForeground": "#FEFCFD",
-        "statusBar.background": "#580F33",
-        "statusBar.foreground": "#FEFCFD",
-        "statusBar.debuggingBackground": "#580F33",
-        "statusBar.debuggingForeground": "#FEFCFD",
         "statusBar.noFolderBackground": "#580F33",
         "statusBar.noFolderForeground": "#FEFCFD"
     }

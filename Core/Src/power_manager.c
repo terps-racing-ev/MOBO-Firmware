@@ -52,6 +52,10 @@ static struct {
     uint8_t        acc_fans_active;
     uint8_t        acc_fans_phase;       /* 0 = DRS, 1 = Fans */
     uint32_t       acc_fans_last_toggle;
+
+    uint8_t        radiator_fans_temp_request;
+    uint8_t        inverter_motor_speed_valid;
+    int16_t        inverter_motor_speed_rpm;
 } g_pm;
 
 static osMutexId_t g_mutex = NULL;
@@ -113,14 +117,50 @@ static void Power_UpdateAccFansActive(uint32_t now)
     g_pm.acc_fans_active = new_active;
 }
 
+/* Caller must hold g_mutex. Update the radiator-fan thermal latch from the
+ * cached inverter coolant temperature. Speed inhibition is applied later when
+ * building the effective output mask so the thermal latch can resume cleanly
+ * once motor speed falls back below the limit. */
+static void Power_UpdateRadiatorFansRequest(void)
+{
+    int16_t coolant_temp_dC = 0;
+    const int16_t on_dC  = (int16_t)(RADIATOR_FANS_TEMP_ON_C  * 10);
+    const int16_t off_dC = (int16_t)(RADIATOR_FANS_TEMP_OFF_C * 10);
+
+    if (!CoolantPump_GetCoolantTempDeciC(&coolant_temp_dC)) {
+        return;
+    }
+
+    if (coolant_temp_dC >= on_dC) {
+        g_pm.radiator_fans_temp_request = 1U;
+    } else if (coolant_temp_dC <= off_dC) {
+        g_pm.radiator_fans_temp_request = 0U;
+    }
+}
+
 /* Caller must hold g_mutex. Drive GPIOs from g_pm.commanded_mask plus any
- * internal overrides (auto coolant pump, Acc Fans alternation). DRS and Fans
- * are unconditionally clamped to mutual exclusion at the end. */
+ * internal overrides (auto coolant pump, Acc Fans alternation, automatic
+ * radiator-fan control). DRS and Fans are unconditionally clamped to mutual
+ * exclusion at the end. */
 static void Power_RecomputeAndDriveGPIO(uint32_t now)
 {
     uint8_t effective = g_pm.commanded_mask;
+    bool radiator_fans_speed_allowed;
+
+    Power_UpdateRadiatorFansRequest();
+
     if (CoolantPump_GetDesiredPump()) {
         effective |= POWER_MASK_PUMP;
+    }
+
+    radiator_fans_speed_allowed = g_pm.inverter_motor_speed_valid &&
+                                  (g_pm.inverter_motor_speed_rpm <= RADIATOR_FANS_MAX_MOTOR_SPEED_RPM);
+
+    /* Radiator Fans are fully auto-controlled: apply the thermal latch when
+     * speed is within range, otherwise force the output off. */
+    effective &= (uint8_t)~POWER_MASK_RADIATOR_FANS;
+    if (g_pm.radiator_fans_temp_request && radiator_fans_speed_allowed) {
+        effective |= POWER_MASK_RADIATOR_FANS;
     }
 
     /* Acc Fans alternation: replace the VCU-supplied DRS/Fans bits with the
@@ -314,6 +354,36 @@ void PowerMgr_HandleHvcAccSummary(const CAN_Message_t *msg)
     uint32_t now = osKernelGetTickCount();
     Power_UpdateAccFansActive(now);
     Power_RecomputeAndDriveGPIO(now);
+    osMutexRelease(g_mutex);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Inverter Motor_Position_Info (standard 11-bit, ID 0x0A5)                  */
+/* ------------------------------------------------------------------------ */
+
+bool PowerMgr_MatchInverterMotorPosition(const CAN_Message_t *msg)
+{
+    return (msg != NULL) && (msg->id == INV_MOTOR_POSITION_INFO_ID);
+}
+
+void PowerMgr_HandleInverterMotorPosition(const CAN_Message_t *msg)
+{
+    int16_t motor_speed_rpm;
+    uint32_t now;
+
+    if (msg == NULL || msg->length < 4U) return;
+
+    /* INV_Motor_Speed : 16|16@1- (1 RPM/LSB), bytes 2..3 little-endian. */
+    motor_speed_rpm = (int16_t)((uint16_t)msg->data[2] |
+                                ((uint16_t)msg->data[3] << 8));
+
+    if (osMutexAcquire(g_mutex, osWaitForever) != osOK) return;
+
+    g_pm.inverter_motor_speed_rpm = motor_speed_rpm;
+    g_pm.inverter_motor_speed_valid = 1U;
+    now = osKernelGetTickCount();
+    Power_RecomputeAndDriveGPIO(now);
+
     osMutexRelease(g_mutex);
 }
 

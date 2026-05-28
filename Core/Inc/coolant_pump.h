@@ -44,6 +44,9 @@ HAL_StatusTypeDef CoolantPump_Init(void);
 /** True if the coolant pump should run based on auto inputs. */
 bool CoolantPump_GetDesiredPump(void);
 
+/** Latest inverter coolant temperature in 0.1 C/LSB; false until first frame. */
+bool CoolantPump_GetCoolantTempDeciC(int16_t *temp_dC);
+
 /* CAN dispatch entries -----------------------------------------------------*/
 bool CoolantPump_MatchInverterTemps(const CAN_Message_t *msg);
 void CoolantPump_HandleInverterTemps(const CAN_Message_t *msg);

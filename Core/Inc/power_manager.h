@@ -21,6 +21,14 @@
   * bit 4). While Acc Fans is active, the firmware IGNORES the VCU-supplied
   * DRS and Fans bits and instead alternates DRS and Fans at
   * ACC_FANS_TOGGLE_PERIOD_MS so exactly one of them is on at any time.
+   *
+   * Radiator Fans auto control
+   * --------------------------
+   * The Radiator Fans output is controlled automatically from inverter coolant
+   * temperature and inverter motor speed. It latches ON when coolant reaches
+   * RADIATOR_FANS_TEMP_ON_C, releases when coolant falls to
+   * RADIATOR_FANS_TEMP_OFF_C, and is forced OFF whenever motor speed exceeds
+   * RADIATOR_FANS_MAX_MOTOR_SPEED_RPM.
   *
   * Mutual exclusion between DRS and Fans is enforced unconditionally: the
   * effective mask is post-clamped so DRS and Fans can NEVER be on together,
@@ -68,6 +76,15 @@ typedef enum {
  * engages even if the VCU has not asserted Acc_Fans_Request. */
 #define ACC_FANS_TEMP_ON_C         45
 #define ACC_FANS_TEMP_OFF_C        40
+
+/* Radiator Fans auto-control thresholds (sourced from inverter coolant temp
+ * and INV_Motor_Speed). The thermal request latches ON at
+ * RADIATOR_FANS_TEMP_ON_C and releases at RADIATOR_FANS_TEMP_OFF_C.
+ * Regardless of temperature, the output is inhibited above
+ * RADIATOR_FANS_MAX_MOTOR_SPEED_RPM. */
+#define RADIATOR_FANS_TEMP_ON_C            42
+#define RADIATOR_FANS_TEMP_OFF_C           40
+#define RADIATOR_FANS_MAX_MOTOR_SPEED_RPM  2380
 
 /* Per-channel FSM ----------------------------------------------------------*/
 typedef enum {
@@ -120,6 +137,8 @@ bool PowerMgr_MatchVcuCommand(const CAN_Message_t *msg);
 void PowerMgr_HandleVcuCommand(const CAN_Message_t *msg);
 bool PowerMgr_MatchHvcAccSummary(const CAN_Message_t *msg);
 void PowerMgr_HandleHvcAccSummary(const CAN_Message_t *msg);
+bool PowerMgr_MatchInverterMotorPosition(const CAN_Message_t *msg);
+void PowerMgr_HandleInverterMotorPosition(const CAN_Message_t *msg);
 
 #ifdef __cplusplus
 }

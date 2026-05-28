@@ -49,6 +49,23 @@ bool CoolantPump_GetDesiredPump(void)
     return desired;
 }
 
+bool CoolantPump_GetCoolantTempDeciC(int16_t *temp_dC)
+{
+    bool valid = false;
+
+    if (temp_dC == NULL || g_mutex == NULL) {
+        return false;
+    }
+
+    if (osMutexAcquire(g_mutex, osWaitForever) == osOK) {
+        *temp_dC = g_cp.coolant_temp_dC;
+        valid = g_cp.temp_valid;
+        osMutexRelease(g_mutex);
+    }
+
+    return valid;
+}
+
 /* ------------------------------------------------------------------------ */
 /* Inverter Temperatures_3 (standard 11-bit, ID 0x0A2)                       */
 /* ------------------------------------------------------------------------ */

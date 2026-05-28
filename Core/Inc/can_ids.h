@@ -40,6 +40,9 @@ extern "C" {
 /* Inverter Temperatures_3 (standard 11-bit). Carries INV_Coolant_Temp at
  * bytes 0..1, signed little-endian, scale 0.1 degC. */
 #define INV_TEMPERATURES_3_ID      0x0A2U       /* standard 11-bit */
+/* Inverter Motor_Position_Info (standard 11-bit). Carries INV_Motor_Speed at
+ * bytes 2..3, signed little-endian, scale 1 RPM. */
+#define INV_MOTOR_POSITION_INFO_ID 0x0A5U       /* standard 11-bit */
 /* VCU_Summary (extended 29-bit). Carries VCU_RTD_Active at bit 32 (byte 4
  * bit 0). */
 #define VCU_SUMMARY_ID             0x0D1001F0U  /* extended 29-bit */
